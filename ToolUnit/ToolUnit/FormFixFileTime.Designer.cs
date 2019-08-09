@@ -38,6 +38,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.button_back = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // datePicker
@@ -84,7 +85,7 @@
             // 
             // button_select
             // 
-            this.button_select.Location = new System.Drawing.Point(526, 39);
+            this.button_select.Location = new System.Drawing.Point(526, 40);
             this.button_select.Name = "button_select";
             this.button_select.Size = new System.Drawing.Size(44, 23);
             this.button_select.TabIndex = 5;
@@ -107,6 +108,7 @@
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // columnHeader1
             // 
@@ -124,11 +126,22 @@
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader3.Width = 135;
             // 
+            // button_back
+            // 
+            this.button_back.Location = new System.Drawing.Point(579, 40);
+            this.button_back.Name = "button_back";
+            this.button_back.Size = new System.Drawing.Size(75, 23);
+            this.button_back.TabIndex = 7;
+            this.button_back.Text = "返回";
+            this.button_back.UseVisualStyleBackColor = true;
+            this.button_back.Click += new System.EventHandler(this.button_back_Click);
+            // 
             // FormFixFileTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(682, 404);
+            this.Controls.Add(this.button_back);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button_select);
             this.Controls.Add(this.textBox_filePath);
@@ -156,5 +169,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.Button button_back;
     }
 }

@@ -28,6 +28,10 @@ namespace ToolUnit
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "请选择文件路径";
+            if (textBox_filePath.Text.Length > 0)
+            {
+                dialog.SelectedPath = textBox_filePath.Text;
+            }
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath;
@@ -45,19 +49,65 @@ namespace ToolUnit
 
             foreach(FileSystemInfo fsi in di.GetFileSystemInfos())
             {
-                ListViewItem item = listView1.Items.Add(fsi.Name);
-                item.SubItems.Add(fsi.LastWriteTime.ToString());
+                string fileName = fsi.Name;
+                string fileType = "";
+                Color color = Color.Black;
 
                 if (fsi is DirectoryInfo)
                 {
-                    item.ForeColor = Color.Blue;
-                    item.SubItems.Add("文件夹");
+                    fileName = fileName + "\\";
+                    fileType = "文件夹";
+                    color = Color.Blue;
                 }
                 else
                 {
-                    item.SubItems.Add("文件");
+                    fileType = "文件";  
+                }
+
+                ListViewItem item = listView1.Items.Add(fileName);
+                item.SubItems.Add(fsi.LastWriteTime.ToString());
+                item.SubItems.Add(fileType);
+                //item.ForeColor = color;
+                item.UseItemStyleForSubItems = false;
+                item.SubItems[0].ForeColor = color;
+            }
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("Double Click!");
+            var items = this.listView1.SelectedItems;
+            foreach(ListViewItem item in items)
+            {
+                System.Console.WriteLine(item.ToString());
+                System.Console.WriteLine(item.Text);
+                System.Console.WriteLine(item.SubItems[2].Text);
+                if (item.SubItems[2].Text.Trim() == "文件夹")
+                {
+                    textBox_filePath.Text = textBox_filePath.Text + item.Text;
                 }
             }
+            
+        }
+
+        private void button_back_Click(object sender, EventArgs e)
+        {
+            string filePath = textBox_filePath.Text;
+            string[] arr = filePath.Split('\\');
+            string newFilePath = "";
+            if (arr.Length  == 2)
+            {
+                //do nothing
+                return;
+            }else if(arr.Length > 2)
+            {
+                for(int i=0; i<=arr.Length-3; i++)
+                {
+                    newFilePath += arr[i] + "\\";
+                }
+            }
+            textBox_filePath.Text = newFilePath;
+            
         }
     }
 }
