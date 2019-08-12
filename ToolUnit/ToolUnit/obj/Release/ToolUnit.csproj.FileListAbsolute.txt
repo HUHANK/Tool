@@ -17,3 +17,6 @@ D:\Git\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.FormMain.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.FormFixFileTime.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.Properties.Resources.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.csproj.GenerateResource.Cache
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\bin\Release\ToolUnit.exe.config
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.exe
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Release\ToolUnit.pdb

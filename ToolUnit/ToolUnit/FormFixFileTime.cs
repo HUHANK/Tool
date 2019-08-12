@@ -35,6 +35,7 @@ namespace ToolUnit
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath;
+                if (foldPath[foldPath.Length - 1] != '\\') foldPath += "\\";
                 textBox_filePath.Text = foldPath;
             }
         }

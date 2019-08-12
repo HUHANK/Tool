@@ -18,3 +18,13 @@ D:\Git\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormMain.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormFixFileTime.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.Properties.Resources.resources
 D:\Git\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.csproj.GenerateResource.Cache
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\bin\Debug\ToolUnit.exe.config
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.exe
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.pdb
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\bin\Debug\ToolUnit.exe
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\bin\Debug\ToolUnit.pdb
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.csprojResolveAssemblyReference.cache
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormMain.resources
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormFixFileTime.resources
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.Properties.Resources.resources
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.csproj.GenerateResource.Cache
