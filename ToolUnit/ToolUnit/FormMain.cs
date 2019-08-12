@@ -22,5 +22,11 @@ namespace ToolUnit
             FormFixFileTime dlg = new FormFixFileTime();
             dlg.ShowDialog();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FormSearchFiles dlg = new FormSearchFiles();
+            dlg.ShowDialog();
+        }
     }
 }

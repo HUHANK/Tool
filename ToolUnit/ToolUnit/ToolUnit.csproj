@@ -58,6 +58,12 @@
     <Compile Include="FormFixFileTime.Designer.cs">
       <DependentUpon>FormFixFileTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSearchFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSearchFiles.Designer.cs">
+      <DependentUpon>FormSearchFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">
@@ -65,6 +71,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormFixFileTime.resx">
       <DependentUpon>FormFixFileTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSearchFiles.resx">
+      <DependentUpon>FormSearchFiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
