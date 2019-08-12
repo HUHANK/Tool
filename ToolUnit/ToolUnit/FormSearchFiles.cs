@@ -58,7 +58,8 @@ namespace ToolUnit
             foreach(FileInfo fi in fis)
             {
                 string FileName = fi.Name;
-                FileName = FileName.Remove(FileName.LastIndexOf("."));
+                if (FileName.Contains("."))
+                    FileName = FileName.Remove(FileName.LastIndexOf("."));
                 if (FileName.ToLower().Contains(m_SearchText.ToLower()))
                 {
                     this.listBox1.Items.Add(fi.FullName);

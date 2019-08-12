@@ -20,13 +20,13 @@ namespace ToolUnit
         private void button1_Click(object sender, EventArgs e)
         {
             FormFixFileTime dlg = new FormFixFileTime();
-            dlg.ShowDialog();
+            dlg.Show();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             FormSearchFiles dlg = new FormSearchFiles();
-            dlg.ShowDialog();
+            dlg.Show();
         }
     }
 }
