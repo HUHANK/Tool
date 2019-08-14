@@ -156,15 +156,11 @@ namespace ToolUnit
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
-            //Console.WriteLine(this.listBox1.SelectedItem.ToString());
             string filePath = this.listBox1.SelectedItem.ToString();
-            //filePath = filePath.Remove(filePath.LastIndexOf("\\"));
-            //Console.WriteLine(filePath);
 
             System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe");
             psi.Arguments = "/e,/select," + filePath;
             System.Diagnostics.Process.Start(psi);
-
         }
 
         private void FormSearchFiles_FormClosing(object sender, FormClosingEventArgs e)
