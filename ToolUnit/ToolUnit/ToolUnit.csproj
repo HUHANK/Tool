@@ -70,6 +70,7 @@
     <Compile Include="FormSearchFiles.Designer.cs">
       <DependentUpon>FormSearchFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="FullTextSearchExt.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormFullTextSearch.resx">

@@ -32,5 +32,15 @@ namespace ToolUnit
                 textBox_filePath.Text = foldPath;
             }
         }
-    }
+
+        private void button_search_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_cancle_Click(object sender, EventArgs e)
+        {
+
+        }
+    }   
 }

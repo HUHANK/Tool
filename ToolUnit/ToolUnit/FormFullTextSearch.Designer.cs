@@ -37,6 +37,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox_filePath = new System.Windows.Forms.TextBox();
             this.button_selectFile = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -77,21 +78,25 @@
             // 
             // button_search
             // 
+            this.button_search.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_search.Location = new System.Drawing.Point(787, 8);
             this.button_search.Name = "button_search";
             this.button_search.Size = new System.Drawing.Size(75, 23);
             this.button_search.TabIndex = 2;
             this.button_search.Text = " 查找";
             this.button_search.UseVisualStyleBackColor = true;
+            this.button_search.Click += new System.EventHandler(this.button_search_Click);
             // 
             // button_cancle
             // 
+            this.button_cancle.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_cancle.Location = new System.Drawing.Point(868, 8);
             this.button_cancle.Name = "button_cancle";
             this.button_cancle.Size = new System.Drawing.Size(75, 23);
             this.button_cancle.TabIndex = 2;
             this.button_cancle.Text = "取消";
             this.button_cancle.UseVisualStyleBackColor = true;
+            this.button_cancle.Click += new System.EventHandler(this.button_cancle_Click);
             // 
             // label3
             // 
@@ -113,7 +118,7 @@
             // button_selectFile
             // 
             this.button_selectFile.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_selectFile.Location = new System.Drawing.Point(416, 41);
+            this.button_selectFile.Location = new System.Drawing.Point(416, 42);
             this.button_selectFile.Name = "button_selectFile";
             this.button_selectFile.Size = new System.Drawing.Size(36, 23);
             this.button_selectFile.TabIndex = 4;
@@ -121,11 +126,21 @@
             this.button_selectFile.UseVisualStyleBackColor = true;
             this.button_selectFile.Click += new System.EventHandler(this.button_selectFile_Click);
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(1, 68);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(953, 504);
+            this.richTextBox1.TabIndex = 5;
+            this.richTextBox1.Text = "";
+            // 
             // FormFullTextSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(956, 573);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button_selectFile);
             this.Controls.Add(this.textBox_filePath);
             this.Controls.Add(this.button_cancle);
@@ -153,5 +168,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox_filePath;
         private System.Windows.Forms.Button button_selectFile;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
