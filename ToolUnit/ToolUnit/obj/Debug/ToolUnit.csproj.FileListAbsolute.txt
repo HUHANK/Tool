@@ -29,3 +29,4 @@ D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormFixFileTime.resource
 D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.Properties.Resources.resources
 D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.csproj.GenerateResource.Cache
 D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormSearchFiles.resources
+D:\GIT\GitHub\Tool\ToolUnit\ToolUnit\obj\Debug\ToolUnit.FormFullTextSearch.resources

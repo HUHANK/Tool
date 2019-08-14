@@ -28,5 +28,11 @@ namespace ToolUnit
             FormSearchFiles dlg = new FormSearchFiles();
             dlg.Show();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            FormFullTextSearch dlg = new FormFullTextSearch();
+            dlg.Show();
+        }
     }
 }
