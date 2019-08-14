@@ -35,6 +35,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_searchTxt = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.checkBox_UL = new System.Windows.Forms.CheckBox();
+            this.checkBox_WM = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -66,7 +68,7 @@
             // 
             // button_search
             // 
-            this.button_search.Location = new System.Drawing.Point(381, 40);
+            this.button_search.Location = new System.Drawing.Point(381, 64);
             this.button_search.Name = "button_search";
             this.button_search.Size = new System.Drawing.Size(75, 23);
             this.button_search.TabIndex = 3;
@@ -77,7 +79,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 45);
+            this.label2.Location = new System.Drawing.Point(13, 69);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 4;
@@ -85,7 +87,7 @@
             // 
             // textBox_searchTxt
             // 
-            this.textBox_searchTxt.Location = new System.Drawing.Point(104, 41);
+            this.textBox_searchTxt.Location = new System.Drawing.Point(104, 65);
             this.textBox_searchTxt.Name = "textBox_searchTxt";
             this.textBox_searchTxt.Size = new System.Drawing.Size(256, 21);
             this.textBox_searchTxt.TabIndex = 5;
@@ -95,17 +97,39 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(15, 68);
+            this.listBox1.Location = new System.Drawing.Point(15, 135);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(577, 352);
             this.listBox1.TabIndex = 6;
             this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
             // 
+            // checkBox_UL
+            // 
+            this.checkBox_UL.AutoSize = true;
+            this.checkBox_UL.Location = new System.Drawing.Point(15, 40);
+            this.checkBox_UL.Name = "checkBox_UL";
+            this.checkBox_UL.Size = new System.Drawing.Size(84, 16);
+            this.checkBox_UL.TabIndex = 7;
+            this.checkBox_UL.Text = "匹配大小写";
+            this.checkBox_UL.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_WM
+            // 
+            this.checkBox_WM.AutoSize = true;
+            this.checkBox_WM.Location = new System.Drawing.Point(106, 40);
+            this.checkBox_WM.Name = "checkBox_WM";
+            this.checkBox_WM.Size = new System.Drawing.Size(84, 16);
+            this.checkBox_WM.TabIndex = 8;
+            this.checkBox_WM.Text = "启用匹配符";
+            this.checkBox_WM.UseVisualStyleBackColor = true;
+            // 
             // FormSearchFiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 428);
+            this.ClientSize = new System.Drawing.Size(605, 497);
+            this.Controls.Add(this.checkBox_WM);
+            this.Controls.Add(this.checkBox_UL);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.textBox_searchTxt);
             this.Controls.Add(this.label2);
@@ -129,5 +153,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_searchTxt;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.CheckBox checkBox_UL;
+        private System.Windows.Forms.CheckBox checkBox_WM;
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 
@@ -17,6 +18,8 @@ namespace ToolUnit
         string m_SearchText;
         public FormSearchFiles()
         {
+            /*设置线程之间可以非安全的操作控件*/
+            Control.CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
         }
 
@@ -48,6 +51,13 @@ namespace ToolUnit
             m_SearchText = textBox_searchTxt.Text.Trim();
 
             this.listBox1.Items.Clear();
+            
+            Thread thread1 = new Thread(this.ThreadProcess);
+            thread1.Start();
+        }
+
+        public void ThreadProcess()
+        {
             SearchDirFiles(m_SearchPath);
         }
 

@@ -76,13 +76,9 @@ namespace ToolUnit
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
-            System.Console.WriteLine("Double Click!");
             var items = this.listView1.SelectedItems;
             foreach(ListViewItem item in items)
             {
-                System.Console.WriteLine(item.ToString());
-                System.Console.WriteLine(item.Text);
-                System.Console.WriteLine(item.SubItems[2].Text);
                 if (item.SubItems[2].Text.Trim() == "文件夹")
                 {
                     textBox_filePath.Text = textBox_filePath.Text + item.Text;
@@ -109,6 +105,29 @@ namespace ToolUnit
             }
             textBox_filePath.Text = newFilePath;
             
+        }
+
+        private void button_fix_Click(object sender, EventArgs e)
+        {
+            var items = this.listView1.SelectedItems;
+            foreach(ListViewItem item in items)
+            {
+                if (item.SubItems[2].Text.Trim() == "文件夹")
+                {
+                    MessageBox.Show("请选择正确的文件，而不是文件夹！");
+                    return;
+                }
+            }
+
+            foreach(ListViewItem item in items)
+            {
+                string filePath = this.textBox_filePath.Text;
+                filePath += item.Text;
+
+                File.SetLastAccessTime(filePath, datePicker.Value);
+                File.SetLastWriteTime(filePath, datePicker.Value);
+            }
+            textBoxOnTextChange(sender, e);
         }
     }
 }

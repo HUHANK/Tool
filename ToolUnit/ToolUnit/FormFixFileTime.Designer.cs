@@ -30,7 +30,6 @@
         {
             this.datePicker = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox_time = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_filePath = new System.Windows.Forms.TextBox();
             this.button_select = new System.Windows.Forms.Button();
@@ -39,14 +38,16 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button_back = new System.Windows.Forms.Button();
+            this.button_fix = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // datePicker
             // 
-            this.datePicker.CustomFormat = "";
+            this.datePicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            this.datePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.datePicker.Location = new System.Drawing.Point(123, 9);
             this.datePicker.Name = "datePicker";
-            this.datePicker.Size = new System.Drawing.Size(142, 21);
+            this.datePicker.Size = new System.Drawing.Size(164, 21);
             this.datePicker.TabIndex = 0;
             // 
             // label1
@@ -57,14 +58,6 @@
             this.label1.Size = new System.Drawing.Size(101, 12);
             this.label1.TabIndex = 1;
             this.label1.Text = "请选择日期和时间";
-            // 
-            // textBox_time
-            // 
-            this.textBox_time.Location = new System.Drawing.Point(274, 9);
-            this.textBox_time.Name = "textBox_time";
-            this.textBox_time.Size = new System.Drawing.Size(142, 21);
-            this.textBox_time.TabIndex = 2;
-            this.textBox_time.Text = "12:00:00";
             // 
             // label2
             // 
@@ -102,6 +95,7 @@
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(1, 69);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(679, 306);
@@ -136,17 +130,27 @@
             this.button_back.UseVisualStyleBackColor = true;
             this.button_back.Click += new System.EventHandler(this.button_back_Click);
             // 
+            // button_fix
+            // 
+            this.button_fix.Location = new System.Drawing.Point(283, 378);
+            this.button_fix.Name = "button_fix";
+            this.button_fix.Size = new System.Drawing.Size(75, 23);
+            this.button_fix.TabIndex = 8;
+            this.button_fix.Text = "修改";
+            this.button_fix.UseVisualStyleBackColor = true;
+            this.button_fix.Click += new System.EventHandler(this.button_fix_Click);
+            // 
             // FormFixFileTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(682, 404);
+            this.Controls.Add(this.button_fix);
             this.Controls.Add(this.button_back);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button_select);
             this.Controls.Add(this.textBox_filePath);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox_time);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.datePicker);
             this.Name = "FormFixFileTime";
@@ -161,7 +165,6 @@
 
         private System.Windows.Forms.DateTimePicker datePicker;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox_time;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_filePath;
         private System.Windows.Forms.Button button_select;
@@ -170,5 +173,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button button_back;
+        private System.Windows.Forms.Button button_fix;
     }
 }
