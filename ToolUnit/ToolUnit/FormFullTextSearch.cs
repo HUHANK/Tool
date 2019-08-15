@@ -35,6 +35,10 @@ namespace ToolUnit
 
         private void button_search_Click(object sender, EventArgs e)
         {
+            
+            CFetchTaskTread task = new CFetchTaskTread(textBox_filePath.Text.Trim(), textBox_fileType.Text.Trim());
+
+            CTaskProcessThread process = new CTaskProcessThread(textBox_searchText.Text.Trim());
 
         }
 

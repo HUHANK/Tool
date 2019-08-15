@@ -75,6 +75,7 @@
             this.textBox_fileType.Name = "textBox_fileType";
             this.textBox_fileType.Size = new System.Drawing.Size(401, 23);
             this.textBox_fileType.TabIndex = 1;
+            this.textBox_fileType.Text = "*.c;*.cpp;*.txt;";
             // 
             // button_search
             // 
