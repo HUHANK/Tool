@@ -16,6 +16,8 @@ namespace ToolUnit
     {
     }
 
+    class CFullText
+
     class CFileSearchDetail
     {
         /*文件名*/
