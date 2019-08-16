@@ -16,7 +16,64 @@ namespace ToolUnit
     {
     }
 
-    class CFullText
+    class CFullTextSearchDisplay 
+    {
+        public static ConcurrentQueue<CFileSearchDetail> m_InQueue = new ConcurrentQueue<CFileSearchDetail>();
+        private Thread m_Handle;
+        public FormFullTextSearch m_form;
+        public static long MatchedLineNum = 0;
+        public static long MatchedFileNum = 0;
+
+        public CFullTextSearchDisplay(FormFullTextSearch f)
+        {
+            m_Handle = null;
+            start();
+            m_form = f;
+        }
+
+        public void Stop()
+        {
+            if (m_Handle != null && m_Handle.IsAlive)
+            {
+                m_Handle.Abort();
+            }
+        }
+
+        public void start()
+        {
+            m_Handle = new Thread(new ThreadStart(this.run));
+            m_Handle.Start();
+        }
+
+        private void run()
+        {
+            bool bDequeueSuccesful = false;
+            CFileSearchDetail fsd;
+            while(true)
+            {
+                bDequeueSuccesful = m_InQueue.TryDequeue(out fsd);
+                if (bDequeueSuccesful == false)
+                {
+                    continue;
+                }
+                if (fsd.FileName == "#$%EXIT%$#")
+                {
+                    m_form.FullTextSearchDone();
+                    return;
+                }
+                if (!fsd.IsMatched) continue;
+                m_form.RichTextBox1.AppendText(fsd.FileName + "\n");
+                MatchedFileNum++;
+                foreach (var item in fsd.m_SearchResults)
+                {
+                    string str = String.Format("\t{0}: {1}", item.Key, item.Value);
+                    m_form.RichTextBox1.AppendText(str+"\n");
+                    MatchedLineNum++;
+                }
+            }
+            
+        }
+    }
 
     class CFileSearchDetail
     {
@@ -28,7 +85,7 @@ namespace ToolUnit
             set { m_FileName = value; }
         }
         /*行号+行的内容*/
-        private Dictionary<int, string> m_SearchResults;
+        public Dictionary<int, string> m_SearchResults;
         /*正则匹配的内容*/
         private string m_Pattern; 
         public string Pattern
@@ -49,12 +106,15 @@ namespace ToolUnit
             get { return m_IsProcessed; }
         }
 
+        public ConcurrentQueue<CFileSearchDetail> m_OutQueue;
+
         public CFileSearchDetail(string fileName)
         {
             m_FileName = fileName;
             m_isMatched = false;
             m_SearchResults = new Dictionary<int, string>();
             m_IsProcessed = false;
+            m_OutQueue = CFullTextSearchDisplay.m_InQueue;
         }
 
         private System.Text.Encoding GetFileEncodeType(string filename)
@@ -89,6 +149,7 @@ namespace ToolUnit
 
         public async void SearchInFile()
         {
+            m_isMatched = false;
             StreamReader sRead = new StreamReader(m_FileName, GetFileEncodeType(m_FileName));
             string line;
             int LineNum = 0;
@@ -102,7 +163,6 @@ namespace ToolUnit
                 {//匹配成功
                     m_isMatched = true;
                     m_SearchResults.Add(LineNum, line);
-                    Console.WriteLine("{0} {1}", LineNum, line);
                 }
 
             }
@@ -118,6 +178,7 @@ namespace ToolUnit
         private ArrayList m_FileSuffixs;
         private Thread m_Handle;
         private bool m_bStop;
+        public static int m_MatchedFileNum = 0;
 
         public static ConcurrentQueue<string> m_TaskQueue = new ConcurrentQueue<string>();
 
@@ -158,14 +219,19 @@ namespace ToolUnit
             m_Handle.Start();
         }
 
-        public void StopTask()
+        public void Stop()
         {
             m_bStop = true;
             m_Handle.Join();
+            if (m_Handle != null && m_Handle.IsAlive)
+            {
+                m_Handle.Abort();
+            }
         }
         private void run()
         {
             SearchDirFilesRecurve(m_SearchDir);
+            m_TaskQueue.Enqueue("#$%EXIT%$#");
         }
 
         private void SearchDirFilesRecurve(string dir)
@@ -189,6 +255,7 @@ namespace ToolUnit
 
                 if (bMatch)
                 {
+                    m_MatchedFileNum++;
                     m_TaskQueue.Enqueue(fi.FullName);
                 }
             }
@@ -224,6 +291,14 @@ namespace ToolUnit
             m_Handle.Start();
         }
 
+        public void Stop()
+        {
+            if (m_Handle != null && m_Handle.IsAlive)
+            {
+                m_Handle.Abort();
+            }
+        }
+
         public void run()
         {
             string filePath;
@@ -237,6 +312,13 @@ namespace ToolUnit
                     m_FailedProcessCount++;
                     continue;
                 }
+                //如果是退出标志就退出
+                if (filePath == "#$%EXIT%$#")
+                {
+                    CFileSearchDetail fsd1 = new CFileSearchDetail(filePath);
+                    fsd1.m_OutQueue.Enqueue(fsd1);
+                    break;
+                }
                 m_SuccessProcessCount++;
 
                 CFileSearchDetail fsd = new CFileSearchDetail(filePath);
@@ -249,6 +331,7 @@ namespace ToolUnit
         {
             CFileSearchDetail fsd = obj as CFileSearchDetail;
             fsd.SearchInFile();
+            fsd.m_OutQueue.Enqueue(fsd);
         }
 
     }

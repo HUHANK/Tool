@@ -131,7 +131,6 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(1, 68);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(953, 504);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
@@ -153,6 +152,7 @@
             this.Controls.Add(this.label1);
             this.Name = "FormFullTextSearch";
             this.Text = "全文检索";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFullTextSearch_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
