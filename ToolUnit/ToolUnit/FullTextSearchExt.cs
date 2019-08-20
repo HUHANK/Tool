@@ -322,35 +322,59 @@ namespace ToolUnit
         {
             if (m_bStop) return;
             DirectoryInfo di = new DirectoryInfo(dir);
-            FileInfo[] fis = di.GetFiles();
-            foreach(FileInfo fi in fis)
+            FileInfo[] fis = null;
+            try
             {
-                if (m_bStop) return;
-                //文件处理
-                string FileName = fi.Name.Trim();
-                bool bMatch = false;
-                foreach(string ext in m_FileSuffixs)
+                fis = di.GetFiles();
+            }catch
+            {
+                //do nothing
+            }
+
+            if (fis != null)
+            {
+                foreach (FileInfo fi in fis)
                 {
-                    if (FileName.EndsWith(ext))
+                    if (m_bStop) return;
+                    //文件处理
+                    string FileName = fi.Name.Trim();
+                    bool bMatch = false;
+                    foreach (string ext in m_FileSuffixs)
                     {
-                        bMatch = true;
+                        if (FileName.EndsWith(ext))
+                        {
+                            bMatch = true;
+                        }
+                    }
+
+                    if (bMatch)
+                    {
+                        m_MatchedFileNum++;
+                        m_TaskQueue.Enqueue(fi.FullName);
                     }
                 }
-
-                if (bMatch)
-                {
-                    m_MatchedFileNum++;
-                    m_TaskQueue.Enqueue(fi.FullName);
-                }
             }
+            
 
             if (m_bStop) return;
-            DirectoryInfo[] dis = di.GetDirectories();
-            foreach( DirectoryInfo de in dis)
+            DirectoryInfo[] dis = null;
+            try
             {
-                if (m_bStop) return;
-                this.SearchDirFilesRecurve(de.FullName);
+                dis = di.GetDirectories();
             }
+            catch
+            {
+                //do nothing
+            }
+
+            if (dis != null)
+            {
+                foreach (DirectoryInfo de in dis)
+                {
+                    if (m_bStop) return;
+                    this.SearchDirFilesRecurve(de.FullName);
+                }
+            }  
         }
     }
 

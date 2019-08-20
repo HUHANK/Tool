@@ -51,6 +51,7 @@ namespace ToolUnit
 
         private void button_search_Click(object sender, EventArgs e)
         {
+            this.m_bQuit = false;
             m_SearchPath = textBox_filePath.Text.Trim();
             if (!Directory.Exists(m_SearchPath))
             {
@@ -132,26 +133,46 @@ namespace ToolUnit
         {
             if (m_bQuit) return;
             DirectoryInfo di = new DirectoryInfo(dir);
-            FileInfo[] fis = di.GetFiles();
-            foreach(FileInfo fi in fis)
+            FileInfo[] fis = null;
+            try
             {
-                if (m_bQuit) return;
-                string FileName = fi.Name;
-                if (FileName.Contains("."))
-                    FileName = FileName.Remove(FileName.LastIndexOf("."));
-                if (CheckFileNameConform(FileName))
+                fis = di.GetFiles();
+            }catch
+            {
+                //do nothing
+
+            }
+            if (fis != null) { 
+                foreach(FileInfo fi in fis)
                 {
-                    this.listBox1.Items.Add(fi.FullName);
+                    if (m_bQuit) return;
+                    string FileName = fi.Name;
+                    if (FileName.Contains("."))
+                        FileName = FileName.Remove(FileName.LastIndexOf("."));
+                    if (CheckFileNameConform(FileName))
+                    {
+                        this.listBox1.Items.Add(fi.FullName);
+                    }
                 }
             }
 
-            DirectoryInfo[] dis = di.GetDirectories();
-            foreach(DirectoryInfo de in dis)
+            DirectoryInfo[] dis = null;
+            try
             {
-                if (m_bQuit) return;
-                this.SearchDirFiles(de.FullName);
+                dis = di.GetDirectories();
             }
-
+            catch
+            {
+                //do nothing
+            }
+            if (dis != null)
+            {
+                foreach (DirectoryInfo de in dis)
+                {
+                    if (m_bQuit) return;
+                    this.SearchDirFiles(de.FullName);
+                }
+            }
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -164,6 +185,16 @@ namespace ToolUnit
         }
 
         private void FormSearchFiles_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.m_bQuit = true;
+            if (this.m_thread1 != null)
+            {
+                if (this.m_thread1.IsAlive)
+                    this.m_thread1.Join();
+            }
+        }
+
+        private void button_cancle_Click(object sender, EventArgs e)
         {
             this.m_bQuit = true;
             if (this.m_thread1 != null)
