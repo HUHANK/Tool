@@ -9,6 +9,7 @@ using System.Threading;
 using System.IO;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace ToolUnit
 {
@@ -24,11 +25,20 @@ namespace ToolUnit
         public static long MatchedLineNum = 0;
         public static long MatchedFileNum = 0;
 
+        public static long TotalRecvFileNum = 0;
+
+        public int m_textIndex;
+
         public CFullTextSearchDisplay(FormFullTextSearch f)
         {
-            m_Handle = null;
-            start();
+            m_textIndex = 0;
+            MatchedLineNum = 0;
+            MatchedFileNum = 0;
+            TotalRecvFileNum = 0;
+            //m_InQueue = new ConcurrentQueue<CFileSearchDetail>();
             m_form = f;
+            m_Handle = null;
+            start();  
         }
 
         public void Stop()
@@ -49,6 +59,7 @@ namespace ToolUnit
         {
             bool bDequeueSuccesful = false;
             CFileSearchDetail fsd;
+            m_form.RichTextBox1.Clear();
             while(true)
             {
                 bDequeueSuccesful = m_InQueue.TryDequeue(out fsd);
@@ -61,13 +72,83 @@ namespace ToolUnit
                     m_form.FullTextSearchDone();
                     return;
                 }
+                TotalRecvFileNum++;
                 if (!fsd.IsMatched) continue;
-                m_form.RichTextBox1.AppendText(fsd.FileName + "\n");
                 MatchedFileNum++;
+
+                m_form.RichTextBox1.AppendText(fsd.FileName + "\n");
+                m_form.RichTextBox1.Select(m_textIndex, fsd.FileName.Length);
+                m_form.RichTextBox1.SelectionColor = System.Drawing.Color.FromArgb(236, 0, 158);
+                FontStyle style = FontStyle.Bold;
+                Font oldFont = new Font("微软雅黑",11);
+                m_form.RichTextBox1.SelectionFont = new Font(oldFont, oldFont.Style );
+                m_form.RichTextBox1.SelectionLength = m_textIndex;
+
+                m_textIndex = m_textIndex + fsd.FileName.Length+1;
                 foreach (var item in fsd.m_SearchResults)
                 {
-                    string str = String.Format("\t{0}: {1}", item.Key, item.Value);
-                    m_form.RichTextBox1.AppendText(str+"\n");
+                    string str = String.Format("\t{0}", item.Key);
+                    m_form.RichTextBox1.AppendText(str);
+                    m_form.RichTextBox1.Select(m_textIndex, str.Length);
+                    m_form.RichTextBox1.SelectionColor = Color.FromArgb(10, 189, 17);
+                    Font font = new Font("宋体", 10);
+                    m_form.RichTextBox1.SelectionFont = new Font(font, font.Style);
+                    m_form.RichTextBox1.SelectionLength = m_textIndex;
+                    m_textIndex += str.Length;
+
+                    str = ": ";
+                    m_form.RichTextBox1.AppendText(str);
+                    m_form.RichTextBox1.Select(m_textIndex, str.Length);
+                    m_form.RichTextBox1.SelectionColor = Color.FromArgb(2, 248, 250);
+                    font = new Font("宋体", 10);
+                    m_form.RichTextBox1.SelectionFont = new Font(font, font.Style|FontStyle.Bold);
+                    m_form.RichTextBox1.SelectionLength = m_textIndex;
+                    m_textIndex += str.Length;
+
+                    string matchStr;
+                    if (fsd.m_MatchResults.TryGetValue(item.Key, out matchStr))
+                    {
+                        str = item.Value+"\n";
+                        int start_pos = str.IndexOf(matchStr);
+                        string str1 = str.Substring(0, start_pos - 0);
+                        string str2 = str.Substring(start_pos + matchStr.Length, str.Length - start_pos - matchStr.Length);
+
+                        m_form.RichTextBox1.AppendText(str1);
+                        m_form.RichTextBox1.Select(m_textIndex, str1.Length);
+                        m_form.RichTextBox1.SelectionColor = Color.FromArgb(0, 0, 0);
+                        font = new Font("宋体", 10);
+                        m_form.RichTextBox1.SelectionFont = new Font(font, font.Style);
+                        m_form.RichTextBox1.SelectionLength = m_textIndex;
+                        m_textIndex += str1.Length;
+
+                        m_form.RichTextBox1.AppendText(matchStr);
+                        m_form.RichTextBox1.Select(m_textIndex, matchStr.Length);
+                        m_form.RichTextBox1.SelectionColor = Color.Red;
+                        font = new Font("宋体", 10);
+                        m_form.RichTextBox1.SelectionFont = new Font(font, font.Style|FontStyle.Bold);
+                        m_form.RichTextBox1.SelectionLength = m_textIndex;
+                        m_textIndex += matchStr.Length;
+
+                        m_form.RichTextBox1.AppendText(str2);
+                        m_form.RichTextBox1.Select(m_textIndex, str2.Length);
+                        m_form.RichTextBox1.SelectionColor = Color.FromArgb(0, 0, 0);
+                        font = new Font("宋体", 10);
+                        m_form.RichTextBox1.SelectionFont = new Font(font, font.Style);
+                        m_form.RichTextBox1.SelectionLength = m_textIndex;
+                        m_textIndex += str2.Length;
+                    }
+                    else
+                    {
+                        str = item.Value + "\n";
+                        m_form.RichTextBox1.AppendText(str);
+                        m_form.RichTextBox1.Select(m_textIndex, str.Length);
+                        m_form.RichTextBox1.SelectionColor = Color.FromArgb(0, 0, 0);
+                        font = new Font("宋体", 10);
+                        m_form.RichTextBox1.SelectionFont = new Font(font, font.Style);
+                        m_form.RichTextBox1.SelectionLength = 0;
+                        m_textIndex += str.Length;
+                    }
+
                     MatchedLineNum++;
                 }
             }
@@ -85,6 +166,7 @@ namespace ToolUnit
             set { m_FileName = value; }
         }
         /*行号+行的内容*/
+        public Dictionary<int, string> m_MatchResults;
         public Dictionary<int, string> m_SearchResults;
         /*正则匹配的内容*/
         private string m_Pattern; 
@@ -113,6 +195,7 @@ namespace ToolUnit
             m_FileName = fileName;
             m_isMatched = false;
             m_SearchResults = new Dictionary<int, string>();
+            m_MatchResults = new Dictionary<int, string>();
             m_IsProcessed = false;
             m_OutQueue = CFullTextSearchDisplay.m_InQueue;
         }
@@ -163,6 +246,7 @@ namespace ToolUnit
                 {//匹配成功
                     m_isMatched = true;
                     m_SearchResults.Add(LineNum, line);
+                    m_MatchResults.Add(LineNum, match.Value);
                 }
 
             }
@@ -275,8 +359,8 @@ namespace ToolUnit
     {
         public ConcurrentQueue<string> m_InQueue;
 
-        private long m_SuccessProcessCount;
-        private long m_FailedProcessCount;
+        public  int m_SuccessProcessCount;
+        public  int m_FailedProcessCount;
         private Thread m_Handle;
         private string m_Pattern;
 
@@ -315,6 +399,10 @@ namespace ToolUnit
                 //如果是退出标志就退出
                 if (filePath == "#$%EXIT%$#")
                 {
+                    while(m_SuccessProcessCount != CFullTextSearchDisplay.TotalRecvFileNum)
+                    {
+                        Thread.Sleep(50);
+                    }
                     CFileSearchDetail fsd1 = new CFileSearchDetail(filePath);
                     fsd1.m_OutQueue.Enqueue(fsd1);
                     break;
