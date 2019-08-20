@@ -60,6 +60,9 @@ namespace ToolUnit
             }
 
             closeAllTasks();
+            CFullTextSearchDisplay.m_InQueue = new System.Collections.Concurrent.ConcurrentQueue<CFileSearchDetail>();
+            CFetchTaskTread.m_TaskQueue = new System.Collections.Concurrent.ConcurrentQueue<string>();
+
             m_FetchTaskTread = new CFetchTaskTread(textBox_filePath.Text.Trim(), textBox_fileType.Text.Trim());
             m_FullTextSearchDisplay = new CFullTextSearchDisplay(this);
             m_TaskProcessThread = new CTaskProcessThread(textBox_searchText.Text.Trim());
@@ -74,19 +77,35 @@ namespace ToolUnit
         public void FullTextSearchDone()
         {
             this.Text = m_Title + " [搜索完毕!]";
-            closeAllTasks();
-            string str = String.Format("总共找到{0}个符合条件的文件,总共成功匹配{1}个文件，总共匹配{2}处;", 
+            
+            string str = String.Format("\n总共找到{0}个符合条件的文件,总共成功匹配{1}个文件，总共匹配{2}处;", 
                 CFetchTaskTread.m_MatchedFileNum, CFullTextSearchDisplay.MatchedFileNum, CFullTextSearchDisplay.MatchedLineNum);
+            //初始化
+            CFullTextSearchDisplay.MatchedFileNum = 0;
+            CFullTextSearchDisplay.MatchedLineNum = 0;
+            CFetchTaskTread.m_MatchedFileNum = 0;
+
             this.richTextBox1.AppendText(str + "\n");
+            richTextBox1.Select(m_FullTextSearchDisplay.m_textIndex, str.Length);
+            richTextBox1.SelectionColor = Color.Black;
+            Font font = new Font("宋体", 11);
+            richTextBox1.SelectionFont = new Font(font, font.Style | FontStyle.Bold);
+            richTextBox1.SelectionLength = 0;
+
             textBox_filePath.Enabled = true;
             textBox_fileType.Enabled = true;
             textBox_searchText.Enabled = true;
             button_search.Enabled = true;
             button_selectFile.Enabled = true;
+            closeAllTasks();
+
+            CFullTextSearchDisplay.m_InQueue = null;
+            CFetchTaskTread.m_TaskQueue = null;
         }
 
         private void button_cancle_Click(object sender, EventArgs e)
         {
+            this.Text = m_Title + " [搜索停止!]";
             closeAllTasks();
             textBox_filePath.Enabled = true;
             textBox_fileType.Enabled = true;
@@ -103,6 +122,8 @@ namespace ToolUnit
                 m_TaskProcessThread.Stop();
             if (m_FullTextSearchDisplay != null )
                 m_FullTextSearchDisplay.Stop();
+            CFullTextSearchDisplay.m_InQueue = null;
+            CFetchTaskTread.m_TaskQueue = null;
         }
 
         private void FormFullTextSearch_FormClosing(object sender, FormClosingEventArgs e)

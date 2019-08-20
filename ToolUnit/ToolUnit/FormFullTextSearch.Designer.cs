@@ -75,7 +75,7 @@
             this.textBox_fileType.Name = "textBox_fileType";
             this.textBox_fileType.Size = new System.Drawing.Size(401, 23);
             this.textBox_fileType.TabIndex = 1;
-            this.textBox_fileType.Text = "*.c;*.cpp;*.txt;";
+            this.textBox_fileType.Text = "*.c;*.cpp;*.txt;*.h;*.sqc;";
             // 
             // button_search
             // 
@@ -113,13 +113,13 @@
             // 
             this.textBox_filePath.Location = new System.Drawing.Point(109, 43);
             this.textBox_filePath.Name = "textBox_filePath";
-            this.textBox_filePath.Size = new System.Drawing.Size(301, 21);
+            this.textBox_filePath.Size = new System.Drawing.Size(449, 21);
             this.textBox_filePath.TabIndex = 3;
             // 
             // button_selectFile
             // 
             this.button_selectFile.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_selectFile.Location = new System.Drawing.Point(416, 42);
+            this.button_selectFile.Location = new System.Drawing.Point(564, 42);
             this.button_selectFile.Name = "button_selectFile";
             this.button_selectFile.Size = new System.Drawing.Size(36, 23);
             this.button_selectFile.TabIndex = 4;
@@ -129,8 +129,10 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.BackColor = System.Drawing.Color.White;
             this.richTextBox1.Location = new System.Drawing.Point(1, 68);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(953, 504);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
