@@ -34,5 +34,10 @@ namespace ToolUnit
             FormFullTextSearch dlg = new FormFullTextSearch();
             dlg.Show();
         }
+
+        private void buttonTB_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
