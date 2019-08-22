@@ -37,7 +37,8 @@ namespace ToolUnit
 
         private void buttonTB_Click(object sender, EventArgs e)
         {
-
+            FormDataBaseSync dlg = new FormDataBaseSync();
+            dlg.Show();
         }
     }
 }
