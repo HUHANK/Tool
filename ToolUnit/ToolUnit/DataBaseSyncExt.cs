@@ -49,7 +49,7 @@ namespace ToolUnit
             return ret;
         }
 
-        public string db2cmd(string cmd)
+        public string db2cmd(string cmd, bool bsync=true)
         {
             string ret = "";
             //把命令写到文件里面方便后面执行
@@ -67,8 +67,15 @@ namespace ToolUnit
             sw.Flush();
             sw.Close();
             sw.Dispose();
-
-            cmd = " db2cmd -i " + m_db2CmdFileName;
+            if (bsync)
+            {
+                cmd = " db2cmd -i " + m_db2CmdFileName;
+            }
+            else
+            {
+                cmd = " db2cmd  " + m_db2CmdFileName;
+            }
+            
 
             ret = this.cmd(cmd);
 
@@ -302,6 +309,26 @@ namespace ToolUnit
             connect();
         }
 
+        public bool testConnect(out string msg)
+        {
+            string conStr = String.Format("Database=KSDBS;Server={0}:{1};UID={2};PWD={3}",
+                m_db2Alias.host, m_db2Alias.port, m_db2Alias.user, m_db2Alias.passwd);
+            try
+            {
+                DB2Connection conn = new DB2Connection(conStr);
+                conn.Open();
+                conn.Close();
+
+                msg = "";
+                return true;
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                return false;
+            }
+        }
+
         public bool connect()
         {
             if (m_isConnected) return m_isConnected;
@@ -373,6 +400,60 @@ namespace ToolUnit
             {
                 m_connect.Close();
             }
+        }
+
+    }
+
+    class CGenDB2ExpImpBat
+    {
+        public SDB2Connection m_sDB2Info;
+        public SDB2Connection m_dDB2Info;
+        public List<string> m_tables;
+        public string m_TableSchema;
+        public string m_FileName;
+
+        public CGenDB2ExpImpBat()
+        {
+            m_tables = new List<string>();
+        }
+
+        public void GenFile()
+        {
+            StreamWriter sWriter = new StreamWriter(m_FileName, false, Encoding.Default);
+            string line = "";
+
+            sWriter.WriteLine("@echo off");
+
+            line = String.Format("db2 connect to {0} user {1} using {2}  \r\n call :PrintErrMsg %errorlevel%  连接{3}数据库  ", m_sDB2Info.alias, m_sDB2Info.user, m_sDB2Info.passwd, m_sDB2Info.alias) ;
+            sWriter.WriteLine(line);
+
+            foreach(string tbl in m_tables)
+            {
+                line = String.Format("db2 \"export to {0}.ixf of ixf SELECT * FROM {1}.{2} WITH UR \"  ", tbl, m_TableSchema, tbl);
+                sWriter.WriteLine(line);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导出表{0}.{1}  \r\n", m_TableSchema, tbl);
+                sWriter.WriteLine(line);
+            }
+
+            sWriter.WriteLine("db2 connect reset\r\n");
+
+            line = String.Format("db2 connect to {0} user {1} using {2}   \r\n call :PrintErrMsg %errorlevel%  连接{3}数据库  ", m_dDB2Info.alias, m_dDB2Info.user, m_dDB2Info.passwd, m_dDB2Info.alias);
+            sWriter.WriteLine(line);
+
+            foreach (string tbl in m_tables)
+            {
+                line = String.Format("db2 \"import from {0}.ixf of ixf modified by compound=100 commitcount 10000 replace into {1}.{2} \"  ", tbl, m_TableSchema, tbl);
+                sWriter.WriteLine(line);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导入表{0}.{1}  \r\n", m_TableSchema, tbl);
+                sWriter.WriteLine(line);
+            }
+            sWriter.WriteLine("db2 connect reset\n");
+
+            line = "echo 数据库同步成功完成！ \r\n pause \r\n exit 0 \r\n:PrintErrMsg\r\n    if %1 equ 0 (goto SUCC) else (goto FAILD)\r\n\r\n    :FAILD\r\n        echo %2失败[%1]\r\n \r\n echo 数据库同步失败\r\n       pause\r\nexit %1\r\n    :SUCC\r\n        echo %2成功[%1]\r\nGOTO:EOF            ";
+            sWriter.WriteLine(line);
+
+            sWriter.Flush();
+            sWriter.Close();
         }
 
     }

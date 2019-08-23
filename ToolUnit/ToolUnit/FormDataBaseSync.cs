@@ -79,7 +79,8 @@ namespace ToolUnit
             }
 
             int i = 0;
-            foreach(string[] em in sTables)
+            this.listView_table.Items.Clear();
+            foreach (string[] em in sTables)
             {
                 bool bMatch = false;
                 for(i=0; i<dTables.Count(); i++)
@@ -133,6 +134,105 @@ namespace ToolUnit
         private void listView_table_DoubleClick(object sender, EventArgs e)
         {
             button_select_Click(sender, e);
+        }
+
+        private void listView_TblSel_DoubleClick(object sender, EventArgs e)
+        {
+            foreach(ListViewItem item in this.listView_TblSel.SelectedItems)
+            {
+                this.listView_TblSel.Items.Remove(item);
+            }
+        }
+
+        private void button_sync_Click(object sender, EventArgs e)
+        {
+            CGenDB2ExpImpBat batFile = new CGenDB2ExpImpBat();
+
+            getSourceDBAndDestDBInfo(out batFile.m_sDB2Info, out batFile.m_dDB2Info);
+
+            foreach(ListViewItem item in this.listView_TblSel.Items)
+            {
+                batFile.m_tables.Add(item.Text);
+            }
+
+            batFile.m_TableSchema = "KS";
+            batFile.m_FileName = "NJFKDJHSJFLSJFLS.bat";
+
+            batFile.GenFile();
+
+            CCmd cmd = new CCmd();
+            cmd.cmd("db2cmd "+ batFile.m_FileName);
+        }
+
+        private bool getSourceDBAndDestDBInfo(out SDB2Connection sDB, out SDB2Connection dDB)
+        {
+            sDB = null;
+            dDB = null;
+
+            string salias = this.comboBox_sDB.Text;
+            foreach (SDB2Connection dn in m_db2Alias)
+            {
+                if (dn.alias == salias)
+                {
+                    sDB = dn;
+                    break;
+                }
+            }
+
+            salias = this.comboBox_dDB.Text;
+            foreach (SDB2Connection dn in m_db2Alias)
+            {
+                if (dn.alias == salias)
+                {
+                    dDB = dn;
+                    break;
+                }
+            }
+
+            sDB.user = textBox_sDBUser.Text;
+            sDB.passwd = textBox_sDBPwd.Text;
+            dDB.user = textBox_dDBUser.Text;
+            dDB.passwd = textBox_dDBPwd.Text;
+
+            return true;
+        }
+        private void button_TestDBConnect_Click(object sender, EventArgs e)
+        {
+            string ErrMsg1, ErrMsg2;
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+            CDB2Option dbOpt = new CDB2Option(sConn);
+            dbOpt.testConnect(out ErrMsg1);
+
+            dbOpt = new CDB2Option(dConn);
+            dbOpt.testConnect(out ErrMsg2);
+
+            if ((ErrMsg1.Length < 1) && (ErrMsg2.Length < 1))
+            {
+                MessageBox.Show("源数据库连接成功!\r\n目标数据库连接成功!","测试结果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if ((ErrMsg1.Length < 1) && (ErrMsg2.Length > 0))
+            {
+                string str = "源数据库连接成功!\r\n目标数据库连接失败：\r\n";
+                str += ErrMsg2;
+                MessageBox.Show(str, "测试结果", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if ((ErrMsg1.Length > 0) && (ErrMsg2.Length < 1))
+            {
+                string str = "目标数据库连接成功!\r\n源数据库连接失败：\r\n";
+                str += ErrMsg1;
+                MessageBox.Show(str, "测试结果", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                string str = "源数据库连接失败：\r\n";
+                str += ErrMsg1;
+                str += "\r\n目标数据库连接失败：\r\n";
+                str += ErrMsg2;
+                MessageBox.Show(str, "测试结果", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }
