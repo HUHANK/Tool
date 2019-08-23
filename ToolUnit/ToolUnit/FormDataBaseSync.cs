@@ -13,9 +13,11 @@ namespace ToolUnit
     public partial class FormDataBaseSync : Form
     {
         private List<SDB2Connection> m_db2Alias; /*数据库别名信息*/
+        private Dictionary<string, SDBTable> m_SelTables;
         public FormDataBaseSync()
         {
             InitializeComponent();
+            m_SelTables = new Dictionary<string, SDBTable>();
         }
 
         private void FormDataBaseSync_Load(object sender, EventArgs e)
@@ -122,7 +124,12 @@ namespace ToolUnit
                         }
                     }
                     if (badd)
+                    {
                         this.listView_TblSel.Items.Add(item.Text);
+                        SDBTable tbl = new SDBTable();
+                        tbl.name = item.Text;
+                        m_SelTables.Add(tbl.name, tbl);
+                    }
                 }
                 else
                 {
@@ -141,6 +148,7 @@ namespace ToolUnit
             foreach(ListViewItem item in this.listView_TblSel.SelectedItems)
             {
                 this.listView_TblSel.Items.Remove(item);
+                this.m_SelTables.Remove(item.Text);
             }
         }
 
@@ -233,6 +241,72 @@ namespace ToolUnit
                 MessageBox.Show(str, "测试结果", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void listView_TblSel_Click(object sender, EventArgs e)
+        {
+            radioButton_delete.Checked = false;
+            radioButton_truncate.Checked = false;
+            radioButton_replace.Checked = false;
+            radioButton_insert.Checked = false;
+            radioButton_insert_update.Checked = false;
+            foreach (ListViewItem item in this.listView_TblSel.SelectedItems)
+            {
+                SDBTable tbl = m_SelTables[item.Text];
+                if (radioButton_delete.Text == tbl.delete_method) radioButton_delete.Checked = true;
+                if (radioButton_truncate.Text == tbl.delete_method) radioButton_truncate.Checked = true;
+
+                if (radioButton_replace.Text == tbl.import_method) radioButton_replace.Checked = true;
+                if (radioButton_insert.Text == tbl.import_method) radioButton_insert.Checked = true;
+                if (radioButton_insert_update.Text == tbl.import_method) radioButton_insert_update.Checked = true;
+            }
+        }
+
+        private void radioButtonClickProc(RadioButton rd, string way)
+        {
+            foreach (ListViewItem item in this.listView_TblSel.SelectedItems)
+            {
+                SDBTable tbl = m_SelTables[item.Text];
+                if (way == "delete")
+                {
+                    if (rd.Checked)
+                        tbl.delete_method = rd.Text;
+                    else
+                        tbl.delete_method = ""; 
+                }
+                else if ("import" == way)
+                {
+                    if (rd.Checked)
+                        tbl.import_method = rd.Text;
+                    else
+                        tbl.import_method = "";
+                }
+                tbl.delete_method = radioButton_delete.Text;
+            }
+        }
+        private void radioButton_delete_Click(object sender, EventArgs e)
+        {
+            radioButtonClickProc(radioButton_delete, "delete");
+        }
+
+        private void radioButton_truncate_Click(object sender, EventArgs e)
+        {
+            radioButtonClickProc(radioButton_truncate, "delete");
+        }
+
+        private void radioButton_replace_Click(object sender, EventArgs e)
+        {
+            radioButtonClickProc(radioButton_replace, "import");
+        }
+
+        private void radioButton_insert_Click(object sender, EventArgs e)
+        {
+            radioButtonClickProc(radioButton_insert, "import");
+        }
+
+        private void radioButton_insert_update_Click(object sender, EventArgs e)
+        {
+            radioButtonClickProc(radioButton_insert, "import");
         }
     }
 }

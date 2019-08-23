@@ -10,6 +10,46 @@ using IBM.Data.DB2;
 
 namespace ToolUnit
 {
+    /*******************结构体类定义START*****************************/
+    class SDB2Connection
+    {
+        public string alias;
+        public string database;
+        public string node;
+        public string note;
+        public string protocol;
+        public string host;
+        public string port;
+        public string user;
+        public string passwd;
+
+        public SDB2Connection()
+        {
+            alias = "";
+            database = "";
+            node = "";
+            note = "";
+            protocol = "";
+            host = "";
+            port = "";
+            user = "";
+            passwd = "";
+        }
+    }
+    class SDBTable
+    {
+        public string name;
+        public string import_method;
+        public string delete_method;
+
+        public SDBTable()
+        {
+            name = "";
+            import_method = "replace";
+            delete_method = "";
+        }
+    }
+    /*******************结构体类定义END*****************************/
     class CCmd
     {
         private Process m_proc;
@@ -82,18 +122,7 @@ namespace ToolUnit
             return ret;
         }
     }
-    class SDB2Connection
-    {
-        public string alias;
-        public string database;
-        public string node;
-        public string note;
-        public string protocol;
-        public string host;
-        public string port;
-        public string user;
-        public string passwd;
-    }
+    
     class CDB2ConnectInfo
     {
         private const string TempDBFileName = "ABCEKFDLOG.OUT";

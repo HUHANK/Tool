@@ -55,8 +55,19 @@
             this.button_SaveConfig = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButton_delete = new System.Windows.Forms.RadioButton();
+            this.radioButton_truncate = new System.Windows.Forms.RadioButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioButton_replace = new System.Windows.Forms.RadioButton();
+            this.radioButton_insert = new System.Windows.Forms.RadioButton();
+            this.radioButton_insert_update = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -207,6 +218,7 @@
             this.columnHeader3});
             this.listView_table.FullRowSelect = true;
             this.listView_table.GridLines = true;
+            this.listView_table.HideSelection = false;
             this.listView_table.Location = new System.Drawing.Point(397, 19);
             this.listView_table.Name = "listView_table";
             this.listView_table.Size = new System.Drawing.Size(383, 665);
@@ -246,12 +258,14 @@
             this.listView_TblSel.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4});
             this.listView_TblSel.FullRowSelect = true;
+            this.listView_TblSel.HideSelection = false;
             this.listView_TblSel.Location = new System.Drawing.Point(826, 19);
             this.listView_TblSel.Name = "listView_TblSel";
             this.listView_TblSel.Size = new System.Drawing.Size(206, 665);
             this.listView_TblSel.TabIndex = 5;
             this.listView_TblSel.UseCompatibleStateImageBehavior = false;
             this.listView_TblSel.View = System.Windows.Forms.View.Details;
+            this.listView_TblSel.Click += new System.EventHandler(this.listView_TblSel_Click);
             this.listView_TblSel.DoubleClick += new System.EventHandler(this.listView_TblSel_DoubleClick);
             // 
             // columnHeader4
@@ -308,11 +322,113 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "已选择的同步表列表";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox5);
+            this.groupBox3.Controls.Add(this.groupBox4);
+            this.groupBox3.Location = new System.Drawing.Point(3, 564);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(352, 116);
+            this.groupBox3.TabIndex = 11;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "导入方式设定";
+            // 
+            // radioButton_delete
+            // 
+            this.radioButton_delete.AutoSize = true;
+            this.radioButton_delete.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_delete.Location = new System.Drawing.Point(18, 18);
+            this.radioButton_delete.Name = "radioButton_delete";
+            this.radioButton_delete.Size = new System.Drawing.Size(59, 16);
+            this.radioButton_delete.TabIndex = 3;
+            this.radioButton_delete.TabStop = true;
+            this.radioButton_delete.Text = "delete";
+            this.radioButton_delete.UseVisualStyleBackColor = true;
+            this.radioButton_delete.Click += new System.EventHandler(this.radioButton_delete_Click);
+            // 
+            // radioButton_truncate
+            // 
+            this.radioButton_truncate.AutoSize = true;
+            this.radioButton_truncate.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_truncate.Location = new System.Drawing.Point(106, 18);
+            this.radioButton_truncate.Name = "radioButton_truncate";
+            this.radioButton_truncate.Size = new System.Drawing.Size(71, 16);
+            this.radioButton_truncate.TabIndex = 3;
+            this.radioButton_truncate.TabStop = true;
+            this.radioButton_truncate.Text = "truncate";
+            this.radioButton_truncate.UseVisualStyleBackColor = true;
+            this.radioButton_truncate.Click += new System.EventHandler(this.radioButton_truncate_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.radioButton_delete);
+            this.groupBox4.Controls.Add(this.radioButton_truncate);
+            this.groupBox4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox4.Location = new System.Drawing.Point(6, 20);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(340, 40);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "删除方式:";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.radioButton_insert_update);
+            this.groupBox5.Controls.Add(this.radioButton_insert);
+            this.groupBox5.Controls.Add(this.radioButton_replace);
+            this.groupBox5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox5.Location = new System.Drawing.Point(6, 66);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(340, 43);
+            this.groupBox5.TabIndex = 5;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "导入方式:";
+            // 
+            // radioButton_replace
+            // 
+            this.radioButton_replace.AutoSize = true;
+            this.radioButton_replace.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_replace.Location = new System.Drawing.Point(18, 20);
+            this.radioButton_replace.Name = "radioButton_replace";
+            this.radioButton_replace.Size = new System.Drawing.Size(65, 16);
+            this.radioButton_replace.TabIndex = 3;
+            this.radioButton_replace.TabStop = true;
+            this.radioButton_replace.Text = "replace";
+            this.radioButton_replace.UseVisualStyleBackColor = true;
+            this.radioButton_replace.Click += new System.EventHandler(this.radioButton_replace_Click);
+            // 
+            // radioButton_insert
+            // 
+            this.radioButton_insert.AutoSize = true;
+            this.radioButton_insert.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_insert.Location = new System.Drawing.Point(106, 20);
+            this.radioButton_insert.Name = "radioButton_insert";
+            this.radioButton_insert.Size = new System.Drawing.Size(59, 16);
+            this.radioButton_insert.TabIndex = 3;
+            this.radioButton_insert.TabStop = true;
+            this.radioButton_insert.Text = "insert";
+            this.radioButton_insert.UseVisualStyleBackColor = true;
+            this.radioButton_insert.Click += new System.EventHandler(this.radioButton_insert_Click);
+            // 
+            // radioButton_insert_update
+            // 
+            this.radioButton_insert_update.AutoSize = true;
+            this.radioButton_insert_update.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_insert_update.Location = new System.Drawing.Point(197, 20);
+            this.radioButton_insert_update.Name = "radioButton_insert_update";
+            this.radioButton_insert_update.Size = new System.Drawing.Size(101, 16);
+            this.radioButton_insert_update.TabIndex = 3;
+            this.radioButton_insert_update.TabStop = true;
+            this.radioButton_insert_update.Text = "insert_update";
+            this.radioButton_insert_update.UseVisualStyleBackColor = true;
+            this.radioButton_insert_update.Click += new System.EventHandler(this.radioButton_insert_update_Click);
+            // 
             // FormDataBaseSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1038, 690);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button_SaveConfig);
@@ -331,6 +447,11 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -365,5 +486,13 @@
         private System.Windows.Forms.Button button_SaveConfig;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton radioButton_delete;
+        private System.Windows.Forms.RadioButton radioButton_truncate;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioButton_insert_update;
+        private System.Windows.Forms.RadioButton radioButton_insert;
+        private System.Windows.Forms.RadioButton radioButton_replace;
     }
 }
