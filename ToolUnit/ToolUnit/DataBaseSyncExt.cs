@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
 using IBM.Data.DB2;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ToolUnit
 {
     /*******************结构体类定义START*****************************/
+    [Serializable]
     class SDB2Connection
     {
         public string alias;
@@ -36,6 +38,8 @@ namespace ToolUnit
             passwd = "";
         }
     }
+
+    [Serializable]
     class SDBTable
     {
         public string name;
@@ -92,28 +96,14 @@ namespace ToolUnit
         public string db2cmd(string cmd, bool bsync=true)
         {
             string ret = "";
-            //把命令写到文件里面方便后面执行
-            if (File.Exists(m_db2CmdFileName))
-            {
-                File.Delete(m_db2CmdFileName);
-            }
-            StreamWriter sw = File.CreateText(m_db2CmdFileName);
-
-            foreach(string line in cmd.Split('\n'))
-            {
-                 sw.WriteLine( "" + line );
-            }
-            sw.WriteLine("exit");
-            sw.Flush();
-            sw.Close();
-            sw.Dispose();
+            
             if (bsync)
             {
-                cmd = " db2cmd -i " + m_db2CmdFileName;
+                cmd = " db2cmd -i " + cmd;
             }
             else
             {
-                cmd = " db2cmd  " + m_db2CmdFileName;
+                cmd = " db2cmd  " + cmd;
             }
             
 
@@ -125,8 +115,8 @@ namespace ToolUnit
     
     class CDB2ConnectInfo
     {
-        private const string TempDBFileName = "ABCEKFDLOG.OUT";
-        private const string TempNodeFileName = "ABCEKNODEFDLOG.OUT";
+        private const string TempDBFileName = "./cache/DB.CFG";
+        private const string TempNodeFileName = "./cache/NODE.CFG";
         public List<SDB2Connection> m_conns;
 
         public CDB2ConnectInfo( )
@@ -135,7 +125,7 @@ namespace ToolUnit
             GetDBDirectorys();
             GetNodeDirectorys();
         }
-
+        
         private System.Text.Encoding GetFileEncodeType(string filename)
         {
             System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -170,12 +160,9 @@ namespace ToolUnit
         {
             if ( !File.Exists(TempDBFileName))
             {
-                string cmdstr = " db2 list db directory > " + TempDBFileName;
-                //cmdstr += " exit";
+                string cmdstr = " \"db2 list db directory > " + TempDBFileName + " && exit \"";
                 CCmd cmd = new CCmd();
                 cmd.db2cmd(cmdstr);
-
-                //Thread.Sleep(1000);
             }
 
             int LNUM = 0;
@@ -184,6 +171,8 @@ namespace ToolUnit
 
             StreamReader sRead = new StreamReader(TempDBFileName, GetFileEncodeType(TempDBFileName));
             string line;
+
+            sRead.ReadLine();
             while((line = sRead.ReadLine()) != null)
             {
                 if (line.Trim().Length < 1) continue;
@@ -227,22 +216,19 @@ namespace ToolUnit
             }
             m_conns.Add(db2);
             sRead.Close();
-            if ((LNUM-3)/10 != TotalEntryNum)
-            {
-                Console.WriteLine("生成的系统数据库目录文件不完整!");
-            }
+            //if ((LNUM-3)/10 != TotalEntryNum)
+            //{
+            //    Console.WriteLine("生成的系统数据库目录文件不完整!");
+            //}
         }
 
         private void GetNodeDirectorys()
         {
             if ( !File.Exists(TempNodeFileName) )
             {
-                string cmdstr = " db2 list node directory > " + TempNodeFileName;
-                //cmdstr += "\n exit"; 
+                string cmdstr = " \"db2 list node directory > " + TempNodeFileName + " && exit\"";
                 CCmd cmd = new CCmd();
                 cmd.db2cmd(cmdstr);
-
-                //Thread.Sleep(1000);
             }
 
             int LNUM = 0;
@@ -254,6 +240,7 @@ namespace ToolUnit
 
             StreamReader sRead = new StreamReader(TempNodeFileName, GetFileEncodeType(TempNodeFileName));
             string line;
+            sRead.ReadLine();
             while ((line = sRead.ReadLine()) != null)
             {
                 if (line.Trim().Length < 1) continue;
@@ -308,10 +295,10 @@ namespace ToolUnit
             }
 
             sRead.Close();
-            if ((LNUM-3)/7 != TotalEntryNum)
-            {
-                Console.WriteLine("生成的节点目录文件不完整!");
-            }
+            //if ((LNUM-3)/7 != TotalEntryNum)
+            //{
+            //    Console.WriteLine("生成的节点目录文件不完整!");
+            //}
         }
     }
 
@@ -398,6 +385,58 @@ namespace ToolUnit
             }
         }
 
+        public bool update(string sql)
+        {
+            try
+            {
+                DB2Transaction trans = m_connect.BeginTransaction();
+                DB2Command cmd = m_connect.CreateCommand();
+                cmd.CommandText = sql;
+                cmd.Transaction = trans;
+                cmd.ExecuteNonQuery();
+                trans.Commit();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+
+        public bool truncate(string tableName)
+        {
+            string sql = String.Format("TRUNCATE TABLE {0}.{1} IMMEDIATE", m_TableSchema, tableName);
+            return update(sql);
+        }
+        public bool delete(string tableName, int count = 10000)
+        {
+            bool ret = true;
+            int COUNT = 0;
+            string sql = String.Format("SELECT COUNT(1) FROM {0}.{1}", m_TableSchema, tableName);
+            if (select(sql))
+            {
+                m_reader.Read();
+
+                int c = m_reader.GetInt32(0);
+                COUNT = c / count + 1;
+
+                m_reader.Close();
+            }
+            else
+            {
+                return false;
+            }
+
+            sql = String.Format("DELETE (SELECT * FROM {0}.{1} FETCH FIRST {2} ROWS ONLY)", m_TableSchema, tableName, count);
+
+            for(int n = 0; n<COUNT; n++)
+            {
+                update(sql);
+            }
+
+            return ret;
+        }
+
         public List<string[]> getAllTables()
         {
             List<string[]> ret = new List<string[]>();
@@ -437,17 +476,21 @@ namespace ToolUnit
     {
         public SDB2Connection m_sDB2Info;
         public SDB2Connection m_dDB2Info;
-        public List<string> m_tables;
+        public List<SDBTable> m_tables;
         public string m_TableSchema;
         public string m_FileName;
+        public string m_ExportDataPath;
 
         public CGenDB2ExpImpBat()
         {
-            m_tables = new List<string>();
+            m_tables = new List<SDBTable>();
+            m_ExportDataPath = "./export_data/";
         }
 
         public void GenFile()
         {
+            CTool.CheckPathExistOrCreate(m_ExportDataPath);
+
             StreamWriter sWriter = new StreamWriter(m_FileName, false, Encoding.Default);
             string line = "";
 
@@ -456,11 +499,11 @@ namespace ToolUnit
             line = String.Format("db2 connect to {0} user {1} using {2}  \r\n call :PrintErrMsg %errorlevel%  连接{3}数据库  ", m_sDB2Info.alias, m_sDB2Info.user, m_sDB2Info.passwd, m_sDB2Info.alias) ;
             sWriter.WriteLine(line);
 
-            foreach(string tbl in m_tables)
+            foreach(SDBTable tbl in m_tables)
             {
-                line = String.Format("db2 \"export to {0}.ixf of ixf SELECT * FROM {1}.{2} WITH UR \"  ", tbl, m_TableSchema, tbl);
+                line = String.Format("db2 \"export to {0}/{1}.ixf of ixf SELECT * FROM {2}.{3} WITH UR \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
                 sWriter.WriteLine(line);
-                line = String.Format("call :PrintErrMsg %errorlevel%  导出表{0}.{1}  \r\n", m_TableSchema, tbl);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导出表{0}.{1}  \r\n", m_TableSchema, tbl.name);
                 sWriter.WriteLine(line);
             }
 
@@ -469,11 +512,22 @@ namespace ToolUnit
             line = String.Format("db2 connect to {0} user {1} using {2}   \r\n call :PrintErrMsg %errorlevel%  连接{3}数据库  ", m_dDB2Info.alias, m_dDB2Info.user, m_dDB2Info.passwd, m_dDB2Info.alias);
             sWriter.WriteLine(line);
 
-            foreach (string tbl in m_tables)
+            foreach (SDBTable tbl in m_tables)
             {
-                line = String.Format("db2 \"import from {0}.ixf of ixf modified by compound=100 commitcount 10000 replace into {1}.{2} \"  ", tbl, m_TableSchema, tbl);
+                if (tbl.import_method == "replace")
+                {
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf modified by compound=100 commitcount 10000 replace into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                }
+                else if (tbl.import_method == "insert")
+                {
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                }
+                else if (tbl.import_method == "insert_update")
+                {
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert_update into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                }
                 sWriter.WriteLine(line);
-                line = String.Format("call :PrintErrMsg %errorlevel%  导入表{0}.{1}  \r\n", m_TableSchema, tbl);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导入表{0}.{1}  \r\n", m_TableSchema, tbl.name);
                 sWriter.WriteLine(line);
             }
             sWriter.WriteLine("db2 connect reset\n");
@@ -485,5 +539,60 @@ namespace ToolUnit
             sWriter.Close();
         }
 
+    }
+
+    class CSerialize
+    {
+        public string FileName;
+        public FileStream FS;
+
+        public void Serialize(Object o)
+        {
+            FS = new FileStream(FileName, FileMode.Create);
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(FS, o);
+            FS.Flush();
+            FS.Close();
+        }
+
+        public object DeSerialize()
+        {
+            object ret = null;
+            FS = new FileStream(FileName, FileMode.Open);
+            BinaryFormatter bf = new BinaryFormatter();
+            ret = bf.Deserialize(FS);
+            FS.Close();   
+            return ret;
+        }
+    }
+
+    class CTool
+    {
+        public static void CheckPathExistOrCreate(string filepath)
+        {
+            string DirName = Path.GetDirectoryName(filepath);
+            if (!Directory.Exists(DirName))
+            {
+                Directory.CreateDirectory(DirName);
+            }
+        }
+
+        public static void DeleteDirAllFiles(string srcPath)
+        {
+            DirectoryInfo dir = new DirectoryInfo(srcPath);
+            FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();
+            foreach(FileSystemInfo fi in fileinfo)
+            {
+                if (fi is DirectoryInfo)
+                {
+                    DirectoryInfo subdir = new DirectoryInfo(fi.FullName);
+                    subdir.Delete(true);
+                }
+                else
+                {
+                    File.Delete(fi.FullName);
+                }
+            }
+        }
     }
 }

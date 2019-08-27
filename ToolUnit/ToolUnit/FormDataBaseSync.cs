@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.IO;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace ToolUnit
     {
         private List<SDB2Connection> m_db2Alias; /*数据库别名信息*/
         private Dictionary<string, SDBTable> m_SelTables;
+        private string m_SerializeConnectsPath = "./cache/SDB2Connections.mis";
         public FormDataBaseSync()
         {
             InitializeComponent();
@@ -22,13 +23,24 @@ namespace ToolUnit
 
         private void FormDataBaseSync_Load(object sender, EventArgs e)
         {
-            CDB2ConnectInfo db2Info = new CDB2ConnectInfo();
-            m_db2Alias = db2Info.m_conns;
+            CTool.CheckPathExistOrCreate(m_SerializeConnectsPath);
+            if (File.Exists(m_SerializeConnectsPath))
+            {
+                CSerialize ser = new CSerialize();
+                ser.FileName = m_SerializeConnectsPath;
+                m_db2Alias = (List<SDB2Connection>)ser.DeSerialize();
+            }
+            else
+            {
+                CDB2ConnectInfo db2Info = new CDB2ConnectInfo();
+                m_db2Alias = db2Info.m_conns;  
+            }
+
             /*初始化下拉框*/
             {
                 this.comboBox_dDB.Items.Clear();
                 this.comboBox_sDB.Items.Clear();
-                foreach (SDB2Connection con in db2Info.m_conns)
+                foreach (SDB2Connection con in m_db2Alias)
                 {
                     this.comboBox_sDB.Items.Add(con.alias);
                     this.comboBox_dDB.Items.Add(con.alias);
@@ -154,17 +166,43 @@ namespace ToolUnit
 
         private void button_sync_Click(object sender, EventArgs e)
         {
+
             CGenDB2ExpImpBat batFile = new CGenDB2ExpImpBat();
 
             getSourceDBAndDestDBInfo(out batFile.m_sDB2Info, out batFile.m_dDB2Info);
+            batFile.m_sDB2Info.user = textBox_sDBUser.Text;
+            batFile.m_sDB2Info.passwd = textBox_sDBPwd.Text;
 
-            foreach(ListViewItem item in this.listView_TblSel.Items)
+            batFile.m_dDB2Info.user = textBox_dDBUser.Text;
+            batFile.m_dDB2Info.passwd = textBox_dDBPwd.Text;
+
             {
-                batFile.m_tables.Add(item.Text);
+                SDB2Connection sConn, dConn;
+                getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+                CDB2Option opt = new CDB2Option(dConn);
+                opt.TableSchema = "KS";
+
+                foreach (KeyValuePair<string, SDBTable> kv in m_SelTables)
+                {
+                    batFile.m_tables.Add(kv.Value);
+                    SDBTable stbl = kv.Value;
+                    if (stbl.delete_method == "delete")
+                    {
+                        opt.delete(stbl.name);
+                    }
+                    else if (stbl.delete_method == "truncate")
+                    {
+                        opt.truncate(stbl.name);
+                    }
+                }
             }
 
+            CTool.CheckPathExistOrCreate("./export_data/");
+            CTool.DeleteDirAllFiles("./export_data/");
+
             batFile.m_TableSchema = "KS";
-            batFile.m_FileName = "NJFKDJHSJFLSJFLS.bat";
+            batFile.m_FileName = "./export_data/NJFKDJHSJFLSJFLS.bat";
 
             batFile.GenFile();
 
@@ -197,11 +235,6 @@ namespace ToolUnit
                 }
             }
 
-            sDB.user = textBox_sDBUser.Text;
-            sDB.passwd = textBox_sDBPwd.Text;
-            dDB.user = textBox_dDBUser.Text;
-            dDB.passwd = textBox_dDBPwd.Text;
-
             return true;
         }
         private void button_TestDBConnect_Click(object sender, EventArgs e)
@@ -209,6 +242,10 @@ namespace ToolUnit
             string ErrMsg1, ErrMsg2;
             SDB2Connection sConn, dConn;
             getSourceDBAndDestDBInfo(out sConn, out dConn);
+            sConn.user = textBox_sDBUser.Text;
+            sConn.passwd = textBox_sDBPwd.Text;
+            dConn.user = textBox_dDBUser.Text;
+            dConn.passwd = textBox_dDBPwd.Text;
 
             CDB2Option dbOpt = new CDB2Option(sConn);
             dbOpt.testConnect(out ErrMsg1);
@@ -250,6 +287,7 @@ namespace ToolUnit
             radioButton_replace.Checked = false;
             radioButton_insert.Checked = false;
             radioButton_insert_update.Checked = false;
+            radioButton_delete_clear.Checked = false;
             foreach (ListViewItem item in this.listView_TblSel.SelectedItems)
             {
                 SDBTable tbl = m_SelTables[item.Text];
@@ -281,7 +319,6 @@ namespace ToolUnit
                     else
                         tbl.import_method = "";
                 }
-                tbl.delete_method = radioButton_delete.Text;
             }
         }
         private void radioButton_delete_Click(object sender, EventArgs e)
@@ -292,6 +329,15 @@ namespace ToolUnit
         private void radioButton_truncate_Click(object sender, EventArgs e)
         {
             radioButtonClickProc(radioButton_truncate, "delete");
+        }
+        private void radioButton_delete_clear_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton_delete_clear.Checked == true)
+            {
+                radioButton_delete.Checked = false;
+                radioButton_truncate.Checked = false;
+                radioButtonClickProc(radioButton_delete, "delete");
+            }
         }
 
         private void radioButton_replace_Click(object sender, EventArgs e)
@@ -308,5 +354,112 @@ namespace ToolUnit
         {
             radioButtonClickProc(radioButton_insert, "import");
         }
+
+        private void button_SaveConfig_Click(object sender, EventArgs e)
+        {
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+            if (sConn != null)
+            {
+                sConn.user = textBox_sDBUser.Text;
+                sConn.passwd = textBox_sDBPwd.Text;
+            }
+            if (dConn != null)
+            {
+                dConn.user = textBox_dDBUser.Text;
+                dConn.passwd = textBox_dDBPwd.Text;
+            }
+
+            CTool.CheckPathExistOrCreate(m_SerializeConnectsPath);
+            CSerialize ser = new CSerialize();
+            ser.FileName = m_SerializeConnectsPath;
+            ser.Serialize(m_db2Alias);
+        }
+
+        private void comboBox_sDB_TextUpdate(object sender, EventArgs e)
+        {
+            textBox_sDBUser.Text = "";
+            textBox_sDBPwd.Text = "";
+            //textBox_dDBUser.Text = "";
+            //textBox_dDBPwd.Text = "";
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+            if (sConn != null)
+            {
+                textBox_sDBUser.Text = sConn.user;
+                textBox_sDBPwd.Text = sConn.passwd;
+            }
+            //if (dConn != null)
+            //{
+            //    textBox_dDBUser.Text = dConn.user;
+            //    textBox_dDBPwd.Text = dConn.passwd;
+            //}
+        }
+
+        private void comboBox_sDB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBox_sDBUser.Text = "";
+            textBox_sDBPwd.Text = "";
+            //textBox_dDBUser.Text = "";
+            //textBox_dDBPwd.Text = "";
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+            if (sConn != null)
+            {
+                textBox_sDBUser.Text = sConn.user;
+                textBox_sDBPwd.Text = sConn.passwd;
+            }
+            //if (dConn != null)
+            //{
+            //    textBox_dDBUser.Text = dConn.user;
+            //    textBox_dDBPwd.Text = dConn.passwd;
+            //}
+        }
+
+        private void comboBox_dDB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //textBox_sDBUser.Text = "";
+            //textBox_sDBPwd.Text = "";
+            textBox_dDBUser.Text = "";
+            textBox_dDBPwd.Text = "";
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+            //if (sConn != null)
+            //{
+            //    textBox_sDBUser.Text = sConn.user;
+            //    textBox_sDBPwd.Text = sConn.passwd;
+            //}
+            if (dConn != null)
+            {
+                textBox_dDBUser.Text = dConn.user;
+                textBox_dDBPwd.Text = dConn.passwd;
+            }
+        }
+
+        private void comboBox_dDB_TextUpdate(object sender, EventArgs e)
+        {
+            //textBox_sDBUser.Text = "";
+            //textBox_sDBPwd.Text = "";
+            textBox_dDBUser.Text = "";
+            textBox_dDBPwd.Text = "";
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+
+            //if (sConn != null)
+            //{
+            //    textBox_sDBUser.Text = sConn.user;
+            //    textBox_sDBPwd.Text = sConn.passwd;
+            //}
+            if (dConn != null)
+            {
+                textBox_dDBUser.Text = dConn.user;
+                textBox_dDBPwd.Text = dConn.passwd;
+            }
+        }
+
+        
     }
 }
