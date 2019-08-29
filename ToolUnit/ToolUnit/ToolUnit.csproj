@@ -56,6 +56,12 @@
     <Compile Include="FormDataBaseSync.Designer.cs">
       <DependentUpon>FormDataBaseSync.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDataBaseSyncSave.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDataBaseSyncSave.Designer.cs">
+      <DependentUpon>FormDataBaseSyncSave.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFullTextSearch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormDataBaseSync.resx">
       <DependentUpon>FormDataBaseSync.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDataBaseSyncSave.resx">
+      <DependentUpon>FormDataBaseSyncSave.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormFullTextSearch.resx">
       <DependentUpon>FormFullTextSearch.cs</DependentUpon>

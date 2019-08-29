@@ -14,9 +14,11 @@ namespace ToolUnit
     {
         private List<SDB2Connection> m_db2Alias; /*数据库别名信息*/
         private Dictionary<string, SDBTable> m_SelTables;
+        private List<SSolutionConfig> m_solutionConfigs;
         private string m_SerializeConnectsPath = "./cache/SDB2Connections.mis";
         public FormDataBaseSync()
         {
+            this.m_solutionConfigs = new List<SSolutionConfig>();
             InitializeComponent();
             m_SelTables = new Dictionary<string, SDBTable>();
         }

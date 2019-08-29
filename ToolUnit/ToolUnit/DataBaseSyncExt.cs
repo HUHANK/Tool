@@ -53,6 +53,23 @@ namespace ToolUnit
             delete_method = "";
         }
     }
+
+    [Serializable]
+    class SSolutionConfig
+    {
+        public string name;
+        public string source_alias;
+        public string dest_alias;
+        public List<SDBTable> tables;
+
+        public SSolutionConfig()
+        {
+            name = "";
+            source_alias = "";
+            dest_alias = "";
+            tables = new List<SDBTable>();
+        }
+    }
     /*******************结构体类定义END*****************************/
     class CCmd
     {
