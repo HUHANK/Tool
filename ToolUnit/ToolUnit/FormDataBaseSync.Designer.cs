@@ -62,8 +62,11 @@
             this.radioButton_replace = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.radioButton_delete = new System.Windows.Forms.RadioButton();
-            this.radioButton_truncate = new System.Windows.Forms.RadioButton();
             this.radioButton_delete_clear = new System.Windows.Forms.RadioButton();
+            this.radioButton_truncate = new System.Windows.Forms.RadioButton();
+            this.comboBox_Schemas = new System.Windows.Forms.ComboBox();
+            this.button_LoadSchema = new System.Windows.Forms.Button();
+            this.button_2left = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -207,7 +210,7 @@
             // 
             // button_uptTable
             // 
-            this.button_uptTable.Location = new System.Drawing.Point(3, 245);
+            this.button_uptTable.Location = new System.Drawing.Point(3, 274);
             this.button_uptTable.Name = "button_uptTable";
             this.button_uptTable.Size = new System.Drawing.Size(94, 23);
             this.button_uptTable.TabIndex = 2;
@@ -280,7 +283,7 @@
             // 
             // button_sync
             // 
-            this.button_sync.Location = new System.Drawing.Point(103, 245);
+            this.button_sync.Location = new System.Drawing.Point(103, 274);
             this.button_sync.Name = "button_sync";
             this.button_sync.Size = new System.Drawing.Size(92, 23);
             this.button_sync.TabIndex = 6;
@@ -290,7 +293,7 @@
             // 
             // button_TestDBConnect
             // 
-            this.button_TestDBConnect.Location = new System.Drawing.Point(3, 216);
+            this.button_TestDBConnect.Location = new System.Drawing.Point(3, 245);
             this.button_TestDBConnect.Name = "button_TestDBConnect";
             this.button_TestDBConnect.Size = new System.Drawing.Size(94, 23);
             this.button_TestDBConnect.TabIndex = 7;
@@ -300,7 +303,7 @@
             // 
             // button_SaveConfig
             // 
-            this.button_SaveConfig.Location = new System.Drawing.Point(103, 216);
+            this.button_SaveConfig.Location = new System.Drawing.Point(103, 245);
             this.button_SaveConfig.Name = "button_SaveConfig";
             this.button_SaveConfig.Size = new System.Drawing.Size(92, 23);
             this.button_SaveConfig.TabIndex = 8;
@@ -417,19 +420,6 @@
             this.radioButton_delete.UseVisualStyleBackColor = true;
             this.radioButton_delete.Click += new System.EventHandler(this.radioButton_delete_Click);
             // 
-            // radioButton_truncate
-            // 
-            this.radioButton_truncate.AutoSize = true;
-            this.radioButton_truncate.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.radioButton_truncate.Location = new System.Drawing.Point(106, 18);
-            this.radioButton_truncate.Name = "radioButton_truncate";
-            this.radioButton_truncate.Size = new System.Drawing.Size(71, 16);
-            this.radioButton_truncate.TabIndex = 3;
-            this.radioButton_truncate.TabStop = true;
-            this.radioButton_truncate.Text = "truncate";
-            this.radioButton_truncate.UseVisualStyleBackColor = true;
-            this.radioButton_truncate.Click += new System.EventHandler(this.radioButton_truncate_Click);
-            // 
             // radioButton_delete_clear
             // 
             this.radioButton_delete_clear.AutoSize = true;
@@ -444,11 +434,57 @@
             this.radioButton_delete_clear.CheckedChanged += new System.EventHandler(this.radioButton_delete_clear_CheckedChanged);
             this.radioButton_delete_clear.Click += new System.EventHandler(this.radioButton_truncate_Click);
             // 
+            // radioButton_truncate
+            // 
+            this.radioButton_truncate.AutoSize = true;
+            this.radioButton_truncate.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.radioButton_truncate.Location = new System.Drawing.Point(106, 18);
+            this.radioButton_truncate.Name = "radioButton_truncate";
+            this.radioButton_truncate.Size = new System.Drawing.Size(71, 16);
+            this.radioButton_truncate.TabIndex = 3;
+            this.radioButton_truncate.TabStop = true;
+            this.radioButton_truncate.Text = "truncate";
+            this.radioButton_truncate.UseVisualStyleBackColor = true;
+            this.radioButton_truncate.Click += new System.EventHandler(this.radioButton_truncate_Click);
+            // 
+            // comboBox_Schemas
+            // 
+            this.comboBox_Schemas.FormattingEnabled = true;
+            this.comboBox_Schemas.Location = new System.Drawing.Point(95, 216);
+            this.comboBox_Schemas.Name = "comboBox_Schemas";
+            this.comboBox_Schemas.Size = new System.Drawing.Size(100, 20);
+            this.comboBox_Schemas.TabIndex = 13;
+            this.comboBox_Schemas.SelectedIndexChanged += new System.EventHandler(this.comboBox_Schemas_SelectedIndexChanged);
+            // 
+            // button_LoadSchema
+            // 
+            this.button_LoadSchema.Location = new System.Drawing.Point(5, 215);
+            this.button_LoadSchema.Name = "button_LoadSchema";
+            this.button_LoadSchema.Size = new System.Drawing.Size(81, 23);
+            this.button_LoadSchema.TabIndex = 14;
+            this.button_LoadSchema.Text = "Load Schema";
+            this.button_LoadSchema.UseVisualStyleBackColor = true;
+            this.button_LoadSchema.Click += new System.EventHandler(this.button_LoadSchema_Click);
+            // 
+            // button_2left
+            // 
+            this.button_2left.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_2left.Location = new System.Drawing.Point(786, 312);
+            this.button_2left.Name = "button_2left";
+            this.button_2left.Size = new System.Drawing.Size(34, 23);
+            this.button_2left.TabIndex = 15;
+            this.button_2left.Text = "←";
+            this.button_2left.UseVisualStyleBackColor = true;
+            this.button_2left.Click += new System.EventHandler(this.button_2left_Click);
+            // 
             // FormDataBaseSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1038, 690);
+            this.Controls.Add(this.button_2left);
+            this.Controls.Add(this.button_LoadSchema);
+            this.Controls.Add(this.comboBox_Schemas);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -516,5 +552,8 @@
         private System.Windows.Forms.RadioButton radioButton_insert;
         private System.Windows.Forms.RadioButton radioButton_replace;
         private System.Windows.Forms.RadioButton radioButton_delete_clear;
+        private System.Windows.Forms.ComboBox comboBox_Schemas;
+        private System.Windows.Forms.Button button_LoadSchema;
+        private System.Windows.Forms.Button button_2left;
     }
 }

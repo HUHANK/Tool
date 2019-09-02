@@ -16,8 +16,10 @@ namespace ToolUnit
         private Dictionary<string, SDBTable> m_SelTables;
         private List<SSolutionConfig> m_solutionConfigs;
         private string m_SerializeConnectsPath = "./cache/SDB2Connections.mis";
+        private string m_Schema;
         public FormDataBaseSync()
         {
+            m_Schema = "";
             this.m_solutionConfigs = new List<SSolutionConfig>();
             InitializeComponent();
             m_SelTables = new Dictionary<string, SDBTable>();
@@ -52,6 +54,11 @@ namespace ToolUnit
 
         private void button_uptTable_Click(object sender, EventArgs e)
         {
+            if (m_Schema.Length < 1)
+            {
+                MessageBox.Show("请选择Schema!");
+                return;
+            }
             List<string[]> sTables = null;
             List<string[]> dTables = null;
 
@@ -71,7 +78,7 @@ namespace ToolUnit
 
             {
                 CDB2Option opt = new CDB2Option(conn);
-                opt.TableSchema = "KS";
+                opt.TableSchema = m_Schema;
                 sTables = opt.getAllTables();
             }
             
@@ -90,7 +97,7 @@ namespace ToolUnit
 
             {
                 CDB2Option opt = new CDB2Option(conn);
-                opt.TableSchema = "KS";
+                opt.TableSchema = m_Schema;
                 dTables = opt.getAllTables();
             }
 
@@ -111,6 +118,13 @@ namespace ToolUnit
                 ListViewItem item = this.listView_table.Items.Add(em[0]);
                 if (bMatch)
                 {
+                    foreach(ListViewItem item1 in this.listView_TblSel.Items)
+                    {
+                        if (item1.Text == em[0])
+                        {
+                            item.ForeColor = Color.Red;
+                        }
+                    }
                     item.SubItems.Add(em[0]);
                     item.SubItems.Add(em[1]);
                 }
@@ -142,7 +156,10 @@ namespace ToolUnit
                         this.listView_TblSel.Items.Add(item.Text);
                         SDBTable tbl = new SDBTable();
                         tbl.name = item.Text;
+                        tbl.schema = m_Schema;
                         m_SelTables.Add(tbl.name, tbl);
+                        item.ForeColor = Color.Red;
+                        item.Selected = false;
                     }
                 }
                 else
@@ -161,6 +178,13 @@ namespace ToolUnit
         {
             foreach(ListViewItem item in this.listView_TblSel.SelectedItems)
             {
+                foreach(ListViewItem item1 in this.listView_table.Items)
+                {
+                    if (item.Text == item1.Text)
+                    {
+                        item1.ForeColor = Color.Black;
+                    }
+                }
                 this.listView_TblSel.Items.Remove(item);
                 this.m_SelTables.Remove(item.Text);
             }
@@ -168,6 +192,11 @@ namespace ToolUnit
 
         private void button_sync_Click(object sender, EventArgs e)
         {
+            if (m_Schema.Length < 1)
+            {
+                MessageBox.Show("请选择Schema!");
+                return;
+            }
 
             CGenDB2ExpImpBat batFile = new CGenDB2ExpImpBat();
 
@@ -183,12 +212,13 @@ namespace ToolUnit
                 getSourceDBAndDestDBInfo(out sConn, out dConn);
 
                 CDB2Option opt = new CDB2Option(dConn);
-                opt.TableSchema = "KS";
+                //opt.TableSchema = m_Schema;
 
                 foreach (KeyValuePair<string, SDBTable> kv in m_SelTables)
                 {
                     batFile.m_tables.Add(kv.Value);
                     SDBTable stbl = kv.Value;
+                    opt.TableSchema = stbl.schema;
                     if (stbl.delete_method == "delete")
                     {
                         opt.delete(stbl.name);
@@ -203,7 +233,7 @@ namespace ToolUnit
             CTool.CheckPathExistOrCreate("./export_data/");
             CTool.DeleteDirAllFiles("./export_data/");
 
-            batFile.m_TableSchema = "KS";
+            batFile.m_TableSchema = m_Schema;
             batFile.m_FileName = "./export_data/NJFKDJHSJFLSJFLS.bat";
 
             batFile.GenFile();
@@ -462,6 +492,35 @@ namespace ToolUnit
             }
         }
 
-        
+        private void button_LoadSchema_Click(object sender, EventArgs e)
+        {
+            SDB2Connection sConn, dConn;
+            getSourceDBAndDestDBInfo(out sConn, out dConn);
+            sConn.user = textBox_sDBUser.Text;
+            sConn.passwd = textBox_sDBPwd.Text;
+            dConn.user = textBox_dDBUser.Text;
+            dConn.passwd = textBox_dDBPwd.Text;
+
+            CDB2Option dbOpt = new CDB2Option(sConn);
+            List<string> schemas = dbOpt.getAllSchemas();
+
+            comboBox_Schemas.Items.Clear();
+            foreach(string schema in schemas)
+            {
+                comboBox_Schemas.Items.Add(schema);
+            }
+
+        }
+
+        private void comboBox_Schemas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_Schema = comboBox_Schemas.Text;
+            button_uptTable_Click(sender, e);
+        }
+
+        private void button_2left_Click(object sender, EventArgs e)
+        {
+            listView_TblSel_DoubleClick(sender, e);
+        }
     }
 }

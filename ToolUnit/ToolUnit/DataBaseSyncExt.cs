@@ -43,12 +43,14 @@ namespace ToolUnit
     class SDBTable
     {
         public string name;
+        public string schema;
         public string import_method;
         public string delete_method;
 
         public SDBTable()
         {
             name = "";
+            schema = "";
             import_method = "replace";
             delete_method = "";
         }
@@ -474,6 +476,24 @@ namespace ToolUnit
             return ret;
         }
 
+        public List<string> getAllSchemas()
+        {
+            List<string> ret = new List<string>();
+
+            string sql = @"SELECT TABSCHEMA FROM syscat.tables WHERE TYPE = 'T' GROUP BY TABSCHEMA";
+            if (!select(sql))
+            {
+                return ret;
+            }
+            while (m_reader.Read())
+            {
+                string schema = m_reader.GetString(0);
+                ret.Add(schema.Trim());
+            }
+
+            return ret;
+        }
+
         public void test()
         {
             string sql = @"export to B_BUSINESS.ixf of ixf SELECT * FROM KS.B_BUSINESS";
@@ -518,9 +538,9 @@ namespace ToolUnit
 
             foreach(SDBTable tbl in m_tables)
             {
-                line = String.Format("db2 \"export to {0}/{1}.ixf of ixf SELECT * FROM {2}.{3} WITH UR \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                line = String.Format("db2 \"export to {0}/{1}.ixf of ixf SELECT * FROM {2}.{3} WITH UR \"  ", m_ExportDataPath, tbl.name, tbl.schema, tbl.name);
                 sWriter.WriteLine(line);
-                line = String.Format("call :PrintErrMsg %errorlevel%  导出表{0}.{1}  \r\n", m_TableSchema, tbl.name);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导出表{0}.{1}  \r\n", tbl.schema, tbl.name);
                 sWriter.WriteLine(line);
             }
 
@@ -533,18 +553,18 @@ namespace ToolUnit
             {
                 if (tbl.import_method == "replace")
                 {
-                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf modified by compound=100 commitcount 10000 replace into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf modified by compound=100 commitcount 10000 replace into {2}.{3} \"  ", m_ExportDataPath, tbl.name, tbl.schema, tbl.name);
                 }
                 else if (tbl.import_method == "insert")
                 {
-                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert into {2}.{3} \"  ", m_ExportDataPath, tbl.name, tbl.schema, tbl.name);
                 }
                 else if (tbl.import_method == "insert_update")
                 {
-                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert_update into {2}.{3} \"  ", m_ExportDataPath, tbl.name, m_TableSchema, tbl.name);
+                    line = String.Format("db2 \"import from {0}/{1}.ixf of ixf  commitcount 10000 insert_update into {2}.{3} \"  ", m_ExportDataPath, tbl.name, tbl.schema, tbl.name);
                 }
                 sWriter.WriteLine(line);
-                line = String.Format("call :PrintErrMsg %errorlevel%  导入表{0}.{1}  \r\n", m_TableSchema, tbl.name);
+                line = String.Format("call :PrintErrMsg %errorlevel%  导入表{0}.{1}  \r\n", tbl.schema, tbl.name);
                 sWriter.WriteLine(line);
             }
             sWriter.WriteLine("db2 connect reset\n");
