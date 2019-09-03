@@ -36,6 +36,7 @@
     <Reference Include="IBM.Data.DB2">
       <HintPath>..\..\..\..\..\Program Files (x86)\IBM\SQLLIB\BIN\netf11\IBM.Data.DB2.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +69,13 @@
     <Compile Include="FormFullTextSearch.Designer.cs">
       <DependentUpon>FormFullTextSearch.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormKnowledgeBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormKnowledgeBase.Designer.cs">
+      <DependentUpon>FormKnowledgeBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormKnowledgeBaseExt.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormFullTextSearch.resx">
       <DependentUpon>FormFullTextSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormKnowledgeBase.resx">
+      <DependentUpon>FormKnowledgeBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

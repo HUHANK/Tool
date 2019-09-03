@@ -32,6 +32,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.buttonTB = new System.Windows.Forms.Button();
+            this.button_known = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -74,11 +75,22 @@
             this.buttonTB.UseVisualStyleBackColor = true;
             this.buttonTB.Click += new System.EventHandler(this.buttonTB_Click);
             // 
+            // button_known
+            // 
+            this.button_known.Location = new System.Drawing.Point(12, 52);
+            this.button_known.Name = "button_known";
+            this.button_known.Size = new System.Drawing.Size(75, 23);
+            this.button_known.TabIndex = 4;
+            this.button_known.Text = "知识库";
+            this.button_known.UseVisualStyleBackColor = true;
+            this.button_known.Click += new System.EventHandler(this.button_known_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 481);
+            this.ClientSize = new System.Drawing.Size(384, 162);
+            this.Controls.Add(this.button_known);
             this.Controls.Add(this.buttonTB);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -95,6 +107,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button buttonTB;
+        private System.Windows.Forms.Button button_known;
     }
 }
 

@@ -40,5 +40,11 @@ namespace ToolUnit
             FormDataBaseSync dlg = new FormDataBaseSync();
             dlg.Show();
         }
+
+        private void button_known_Click(object sender, EventArgs e)
+        {
+            FormKnowledgeBase dlg = new FormKnowledgeBase();
+            dlg.Show();
+        }
     }
 }
