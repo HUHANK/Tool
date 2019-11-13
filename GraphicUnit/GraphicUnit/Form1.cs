@@ -16,5 +16,16 @@ namespace GraphicUnit
         {
             InitializeComponent();
         }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            Pen p = new Pen(Color.Blue, 1);
+
+            g.DrawLine(p, 10, 10, 100, 100);
+            g.DrawRectangle(p, 10, 10, 100, 100);
+            g.DrawEllipse(p, 10, 10, 100, 100);
+        }
     }
 }
