@@ -1,0 +1,183 @@
+	char scust_no[11];			/*1 客户号 */
+	char scust_no2[11];			/* 第二客户号 */
+	char sholder_ac_no[16];		/* 股东代码 */
+	char sholder_ac_no2[16];	/* 第二股东代码 */
+	char sholder_type[3];		/* 股东代码类别 */
+	char sholder_type2[3];		/* 第二股东代码类别 */
+	char sname[21];				/* 姓名 */
+	char sname2[21];			/* 第二姓名 */
+
+	char sall_name[81];			/*2 全名 */
+	char smarket_code[2];		/* 市场代码 */
+	char smarket_code2[2];		/* 市场代码2 */
+	char sdate0[9];				/* 日期 委托日期*/
+	char sdate1[9];				/* 日期 成交日期*/
+	char sdate2[9];				/* 日期 报盘日期*/
+	char sdate3[9];				/* 日期 发生日期*/
+	char stime0[9];				/* 时间 委托时间*/
+
+	char stime1[9];				/*3 时间 成交时间*/
+	char stime2[9];				/* 时间 包盘时间*/
+	char stime3[9];				/* 时间 发生时间*/
+	long	lvol0;				/* 数量0 委托数量		买量1*/
+	long	lvol1;				/* 数量1 成交数量		买量2*/
+	long	lvol2;				/* 数量2 可用数量		买量3*/
+	long	lvol3;				/* 数量3 手工冻结数量	买量4*/
+	long	lvol4;				/* 数量4 委托冻结数量	卖量1*/
+
+	long	lvol5;				/*4 数量5 买入成交数量	卖量2*/
+	long	lvol6;				/* 数量6 卖出成交数量	卖量3*/
+	long	lvol7;				/* 数量7 清算后余额		卖量4*/
+	long	lvol8;				/* 数量8 手工解冻数量 */
+	long	lvol9;				/* 数量9 存入数量 */
+	long	lvol10;				/* 数量10 取出数量 */
+	long	lvol11;				/* 数量11 买入未过户数量 */
+	long	lvol12;				/* 数量12 卖出未过户数量 */
+
+	double	damt0;				/*5 金额0 委托价格 */
+	double	damt1;				/* 金额1 委托金额 */
+	double	damt2;				/* 金额2 成交价格 */
+	double	damt3;				/* 金额3 成交金额 */
+	double	damt4;				/* 金额4 清算后余额 */
+	double	damt5;				/* 金额5 存入金额 */
+	double  damt6;				/* 金额6 取出金额 */
+	double	damt7;				/* 金额7 现金金额 */
+
+	double	damt8;				/*6 金额8 支汇票金额 */
+	double	damt9;				/* 金额9 异常冻结金额 */
+	double	damt10;				/* 金额10 买入冻结金额 */
+	double	damt11;				/* 金额11 卖出冻结金额 */
+	double	damt12;				/* 金额12 买入成交金额 */
+	double	damt13;				/* 金额13 卖出成交金额 */
+	double	damt14;				/* 金额14 手工冻结金额 */
+	double	damt15;				/* 金额15 手工解冻金额 */
+
+	double	damt16;				/*7 金额16 贷款金额 */
+	double	damt17;				/* 金额17 发生金额 */
+	double	damt18;				/* 金额18 买入未过户金额 */
+	double	damt19;				/* 金额19 卖出未过户金额 */
+	double	damt20;				/* 金额20 利息积数 */
+	double	damt21;				/* 金额21 罚息积数 */
+	double	damt22;				/* 金额22 贷款利息9积数 */
+	double	damt23;				/* 金额23 信用金额 */
+
+	double	damt24;				/*8 金额24 禁用资金 */
+	double	damt25;				/* 金额25 禁取资金 */
+	double	damt26;				/* 金额26 利息 */
+	double	damt27;				/* 金额27 罚息 */
+	double	damt28;				/* 金额28 贷款利息 */
+	double	damt29;				/* 金额29 市值 */
+	double	damt30;				/* 金额30 虚增保证金 */
+	double	damt31;				/* 金额31 手续费 */
+
+	double	damt32;				/*9 金额32 印花税 */
+	double	damt33;				/* 金额33 过户费 */
+	char	sstock_code[9];		/* 证券代码 */
+	char	sstock_code2[9];	/* 证券代码2 */
+	char	scust_type[3];		/* 客户类别 */
+	char	scust_type2[3];		/* 客户类别2 */
+	char	sstat_type[3];		/* 统计类别 */
+	char	sstat_type2[3];		/* 统计类别2 */
+
+	char	sroom_no[4];		/*10 客户组号 */
+	char	sroom_no2[4];		/* 客户组号2 */
+	char	sopen_emp[7];		/* 职工 */
+	char	sclose_emp[7];		 /* 职工 */
+	char	schange_emp[7];		/* 职工 */
+	char	scheck_emp[7];		/* 复核职工 */
+	char	semp[7];			/* 职工 */
+	char	snation_code[4];	/* 国籍代码 */
+
+	long	lcert_code;			/*11 证件类别 */
+	char	stx_pwd[9];			/* 交易密码 */
+	char	stx_pwd2[9];		/* 交易密码2 */
+	char	swithdraw_pwd[9];	/* 取款密码 */
+	char	swithdraw_pwd2[9];	/* 取款密码2 */
+	char	semp_pwd[9];		/* 柜员密码 */
+	char	semp_pwd2[9];		/* 柜员密码2 */
+	char	sbank_pwd[9];		/* 银行密码 */
+
+	char	sbank_pwd2[9];		/*12 银行密码2 */
+	char	scust_auth[21];		/* 客户权限 */
+	char	scust_auth2[21];	/* 客户权限2 */
+	char	scust_limit[33];	/* 客户限制 */
+	char	scust_limit2[33];	/* 客户限制2 */
+	long	lsafe_level;		/* 安全级别 */
+	long	lsafe_level2;		/* 安全级别2 */
+	char	spost_code[7];		/* 邮政编码 */
+
+	char	spost_code2[7];		/*13 邮政编码2 */
+	char	sphone[31];			/* 联系电话 */
+	char	sphone2[31];		/* fax */
+	char	sphone3[31];		/* 移动电话 */
+	char	spager[31];			/* 传呼 */
+	char	semail[61];			/* email */
+	char	semail2[61];		/* email2 */
+	char	snote[81];			/* 备注 */
+
+	char	snote2[81];			/*14 备注2 */
+	char	scert_no[51];		/* 身份证号码 */
+	char	scert_no2[51];		/* 身份证号码2 */
+	char	scert_addr[81];		/* 身份证地址 */
+	char	sstatus0[2];		/* 状态，客户状态 */
+	char	sstatus1[2];		/* 状态1 */
+	char	sstatus2[2];		/* 状态2 */
+	char	sstatus3[2];		/* 状态3 */
+
+	char	sstatus4[2];		/*15 状态4 */
+	long	lwithdraw_flag;		/* 提款方式 */
+	char	saddr[81];			/* 联系地址 */
+	char	saddr2[81];			/* 联系地址2 */
+	char	sserial0[13];		/* 序号0 */
+	char	sserial1[13];		/* 序号1 */
+	char	sserial2[13];		/* 序号2 */
+	char	sserial3[13];		/* 序号3 */
+
+	char	sserial4[13];		/*16 序号4 */
+	char	scurrency_type[3];	/* 货币类型 */
+	char	scurrency_type2[3];	/* 货币类型2 */
+	char	sbranch_code0[4];	/* 开户营业部号码 */
+	char	sbranch_code1[4];	/* 发生营业部号码 */
+	char	sbranch_code2[4];	/* 营业部号码2 */
+	unsigned char usset0[100];	/* 管理权限集合 */
+	unsigned char usset1[100];	/* 授权权限集合 */
+
+	unsigned char usset2[100];	/*17 操作权限集合 */
+	unsigned char usset3[100];	/* 菜单权限集合 */
+	unsigned char usset4[100];	/* 岗位集合 */
+	unsigned char usset5[100];	/* 市场集合 */
+	unsigned char usset6[100];	/* 货币集合 */
+	char	sstation0[17];		/* 工作站地址 */
+	char	sstation1[17];		/* 工作站地址2 */
+	char	sbank_acc[41];		/* 银行账号 */
+
+	char	sbank_acc2[41];		/*18 银行账号2 */
+	long	lbank_acc_type;		/* 银行账号类别 */
+	long	lbank_acc_type2;	/* 银行账号类别2 */
+	char	smain_flag[2];		/* 主副标志 */
+	char	smain_flag2[2];		/* 主副标志 */
+	char	sbank_code[7];		/* 银行代码 */
+	char	sbank_code2[7];		/* 银行代码2 */
+	char	semp_no[9];			/* 工号 */
+
+	char	semp_no2[9];		/*19 工号2 */
+	double	drate0;				/* 比率 */
+	double	drate1;				/* 比率1 */
+	long	lserial0;			/* 序列号 0 */
+	long	lserial1;			/* 序列号 1 */
+	char	sbankname[81];		/* 银行名称 */
+	char	sbankname2[81];		/* 银行名称2 */
+	char	scard0[51];			/* 磁卡号码 */
+
+	char	scard1[51];			/*20 磁卡号码 */
+	char	sorder0[11];			/* 合同序号 */
+	char	sorder1[11];			/* 合同序号 */
+	char	sorder2[11];			/* 合同序号 */
+	char    scusttypes[201];	        /* 客户类别集合 */
+	char    ssectypes[201];	                /* 证券类别集合 */
+
+	char	vsmess[256];		/* 23 信息 */
+	char	vsvarstr0[256];		/* 变长的字符串 */
+	char	vsvarstr1[256];		/* 变长的字符串 */
+	char	vsvarstr2[256];		/* 变长的字符串 */
+	char	vsvarstr3[256];		/* 变长的字符串 */
